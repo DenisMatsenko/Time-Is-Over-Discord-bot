@@ -39,18 +39,14 @@ client.on('ready', (client) => {
     //         // client.users.cache.get('538343406326513704').send('hi')
     //     }
     // }) 
-
-
-    const guildId = '919660235604508772'
-    const guild = client.guilds.cache.get(guildId)
     let commands
 
-    if(guild) {
-        commands = guild.commands
-    }
-    else {
+    // const guildId = '919660235604508772'
+    // const guild = client.guilds.cache.get(guildId)
+    //     commands = guild.commands
+
         commands = client.application?.commands
-    }
+
 
     commands?.create({
         name: "bag",
@@ -84,10 +80,9 @@ client.on('ready', (client) => {
         
     })
 
-    commands?.create({
-        name: "getcode",
-        description: "for login on site",
-    }) 
+
+
+    // commands?.delete()
 
     commands?.create({
         name: "myreferral",
@@ -403,18 +398,18 @@ client.on('interactionCreate', async (interaction) => {
 
     }
 
-    else if(commandName === "getcode") {
+    // else if(commandName === "getcode") {
 
-        try{
-            if (interaction.member.permissions.has('ADMINISTRATOR')) {interaction.reply({
-                content: 'ur code',
-            })}
-        }
-        catch {
-            interaction.reply('no')
-        }
+    //     try{
+    //         if (interaction.member.permissions.has('ADMINISTRATOR')) {interaction.reply({
+    //             content: 'ur code',
+    //         })}
+    //     }
+    //     catch {
+    //         interaction.reply('no')
+    //     }
         
-    }
+    // }
 
     else if(commandName === 'setchannel') {
         const channel = options.getChannel('channel')
@@ -589,8 +584,13 @@ client.on('messageCreate', async (message) => {
     }
         
     if(message.content == 'aaa') {
-        let cnl = Array.from(client.channels.cache.get('919660235604508777').members).length
-        console.log("cnl: ",  cnl)
+    //     client.application.commands.fetch('1004375822959923210') // id of your command
+    //     .then( (command) => {
+    //   console.log(`Fetched command ${command.name}`)
+    //   // further delete it like so:
+    //   command.delete()
+    //   console.log(`Deleted command ${command.name}`)
+    //   }).catch(console.error);
     } 
  
 
@@ -678,4 +678,5 @@ client.on('messageCreate', async (message) => {
 })
 
 
-client.login(process.env.token) 
+// client.login(process.env.token)
+client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GCz2iS.ulvGSuIiJdSoihmUZd6Ki6c5vC7ffVtgFHpjTY')
