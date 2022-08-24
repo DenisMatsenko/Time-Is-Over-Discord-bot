@@ -8,7 +8,7 @@ import calcVoiceTime from './functions/calc-voice-time.js'
 import roleIsOwer from './functions/role-is-ower.js'
  
 import SlashTop from './functions/slash/slash-top.js'
-// import SlashWallet from './functions/slash/slash-Wallet.js'
+import SlashWallet from './functions/slash/slash-wallet.js'
 import SlashMyReferral from './functions/slash/slash-my-referral.js'
 import SlashWork from './functions/slash/slash-work.js'
 import SlashCrime from './functions/slash/slash-crime.js'
@@ -482,7 +482,7 @@ client.on('interactionCreate', async (interaction) => {
 
         else if(commandName === "roomname") { roomName(interaction, options, client)}
 
-        // else if(commandName === "wallet") { SlashWallet(interaction, options, client)}
+        else if(commandName === "wallet") { SlashWallet(interaction, options, client)}
 
         else if(commandName === "myreferral") { SlashMyReferral(interaction, options, client)}    
 })
