@@ -490,6 +490,8 @@ client.on('interactionCreate', async (interaction) => {
 client.on('voiceStateUpdate', async (oldState, newState) => {
     userCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name, client)
 
+    console.log("control here\n\n")
+ 
     setTimeout(roomsCreaterChack, 100, oldState, newState)
     setTimeout(emptyRoomChack, 100, oldState, newState)
     setTimeout(calcVoiceTime, 1500, oldState, newState, new Date(), client)
@@ -659,6 +661,4 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-
-client.login(process.env.token)
 client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
