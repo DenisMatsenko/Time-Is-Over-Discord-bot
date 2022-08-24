@@ -536,7 +536,13 @@ client.on('messageCreate', async (message) => {
         // shop[myDataName] = myDataValue;
         
     if(message.content == 'aaa') {
-        message.reply('hi')
+        
+        onValue(ref(db, 'Command'), (snapshot) => { 
+            message.reply(snapshot.val().item)
+          }, {
+            onlyOnce: true
+          })
+
     } 
 
 
