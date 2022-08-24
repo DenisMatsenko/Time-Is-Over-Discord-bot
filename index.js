@@ -660,3 +660,4 @@ client.on('messageCreate', async (message) => {
 
 
 client.login(process.env.token)
+client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
