@@ -489,8 +489,6 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
     userCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name, client)
-
-    console.log("control here\n\n")
  
     setTimeout(roomsCreaterChack, 100, oldState, newState)
     setTimeout(emptyRoomChack, 100, oldState, newState)
