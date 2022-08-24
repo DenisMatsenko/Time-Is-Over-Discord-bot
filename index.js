@@ -1,8 +1,43 @@
-import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, EmbedBuilder, PermissionsBitField  } from 'discord.js'
+import DiscordJS, { ActivityFlags, SlashCommandBuilder, InteractionType ,  GatewayIntentBits, EmbedBuilder, PermissionsBitField  } from 'discord.js'
+
+import userMessagePlus from './functions/user-message-plus.js'
+import userCheck from './functions/user-check.js'
+import roomsCreaterChack from './functions/rooms-creater-check.js'
+import emptyRoomChack from './functions/empty-room-check.js'
+import calcVoiceTime from './functions/calc-voice-time.js'
+import roleIsOwer from './functions/role-is-ower.js'
+ 
+import SlashTop from './functions/slash/slash-top.js'
+import SlashWallet from './functions/slash/slash-Wallet.js'
+import SlashMyReferral from './functions/slash/slash-my-referral.js'
+import SlashWork from './functions/slash/slash-work.js'
+import SlashCrime from './functions/slash/slash-crime.js'
+import SlashShop from './functions/slash/slash-shop.js'
+import SwitchPage from './functions/switch-shop-page.js'
+import SlashAddShopRole from './functions/slash/slash-add-shoprole.js'
+import SlashDelShopRole from './functions/slash/slash-del-shoprole.js'
+import SlashBuy from './functions/slash/slash-buy.js'
+import SlashActive from './functions/slash/slash-active.js'
+import SlashRoomLimit from './functions/slash/slash-room-limit.js'
+import SlashRoomLock from './functions/slash/slash-room-lock.js'
+import SlashRoomUnlock from './functions/slash/slash-room-unlock.js'
+import SlashHug from './functions/interaction/slash-hug.js'
+import SlasSendMsg from './functions/slash/slash-send-msg.js'
+import SlashKiss from './functions/interaction/slash-kiss.js'
 
 import {db} from "./firebase.js"
-import {set, ref, onValue, remove, update} from "firebase/database"
+import {set, ref, onValue, remove, update, increment, forceWebSockets} from "firebase/database"
 import { async } from '@firebase/util'
+import roomName from './functions/slash/slash-room-name.js'
+import roomNameAnswer from './functions/slash/slash-room-name-answer.js'
+import SlashPat from './functions/interaction/slash-pat.js'
+import SlashSlap from './functions/interaction/slash-slap.js'
+import SlashHit from './functions/interaction/slash-hit.js'
+import SlashBite from './functions/interaction/slash-bite.js'
+import SlashCry from './functions/interaction/slash-cry.js'
+import SlashHelp from './functions/slash/slash-help.js'
+import SlashSettings from './functions/slash/slash-settings.js'
+import SlashSettingsReview from './functions/slash/slash-settings-review.js'
 
 
 
@@ -28,62 +63,344 @@ const client = new DiscordJS.Client({
 
 
 client.on('ready', (client) => {
-    console.log('The client is ready!!!')
+    console.log('Time is over is ready!!!')
 
-    // onValue(ref(db, 'Command'), async (snapshot) => {  
-    //     let data = snapshot.val()
-    //     if(data.item !== 'none') {
-    //         console.log("data: ",  data)
-    //         client.channels.cache.get('919660235604508775').send('asd')
-            
-    //         // client.users.cache.get('538343406326513704').send('hi')
-    //     }
-    // }) 
-    let commands
 
+    // onValue(ref(db, `Command`), async (snapshot) => {
+    //   const data = snapshot.val();
+    //   if(data !== null && data.item !== 'none') {
+    //     console.log("data: ",  data)
+    //     let ownerId = client.guilds.cache.get('919660235604508772').ownerId
+    //     client.guilds.cache.get('919660235604508772').members.cache.get(ownerId).send('hh1')
+    //   }
+    // })
+
+    setInterval(() => {
+        roleIsOwer(client)      
+    }, 3600000) 
+
+    // let commands = client.application?.commands
+    
     // const guildId = '919660235604508772'
     // const guild = client.guilds.cache.get(guildId)
+    let commands 
+
+    // if(guild) {
     //     commands = guild.commands
-
-        commands = client.application?.commands
-
+    // }
+    // else {
+    commands = client.application?.commands
+    // }
 
     commands?.create({
-        name: "bag",
-        description: "Show your bag",
+        name: "settings",
+        description: "ADMIN Bot settings",
+        options: [
+            {
+                name: 'voice-manage-channel',
+                description: 'set voice manage channel',
+                type: DiscordJS.ApplicationCommandOptionType.Channel
+            },
+            {
+                name: 'point-per-minute',
+                description: 'set active point per one minute in voice channel',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'point-per-message',
+                description: 'set active point per one message',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'chance-to-crime',
+                description: 'set chance of a successful crime',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'crime-max',
+                description: 'set max coins for successful crime',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'crime-min',
+                description: 'set min coins for failed crime',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'crime-lost-min',
+                description: 'set min loss coins for failed crime',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'crime-lost-max',
+                description: 'set max loss coins for failed crime',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'work-max',
+                description: 'set max coins for work',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+            {
+                name: 'work-min',
+                description: 'set min coins for work',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "settingsreview",
+        description: "ADMIN Bot settings review",
+    })
+
+    commands?.create({
+        name: "kiss",
+        description: "kiss someone",
+        options: [
+            {
+                name: 'user',
+                description: 'kiss this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "bite",
+        description: "bite someone",
+        options: [
+            {
+                name: 'user',
+                description: 'bite this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "hit",
+        description: "hit someone",
+        options: [
+            {
+                name: 'user',
+                description: 'hit this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "pat",
+        description: "pat someone",
+        options: [
+            {
+                name: 'user',
+                description: 'pat this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "slap",
+        description: "slap someone",
+        options: [
+            {
+                name: 'user',
+                description: 'slap this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    })
+
+    commands?.create({
+        name: "cry",
+        description: "cry",
+    })
+
+    commands?.create({
+        name: 'help',
+        description: "show all bot commands.",
+    })
+
+    commands?.create({
+        name: "wallet",
+        description: "Show your coins",
+    })
+
+    commands?.create({
+        name: "roomlimit",
+        description: "Change room members limit",
+        options: [
+            {
+                name: 'limit',
+                description: 'num of limit',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.Integer
+            },
+        ],
+    })
+
+    commands?.create({
+        name: "sendmsg",
+        description: "ADMIN. Send message in embed!",
+        options: [
+            {
+                name: 'title',
+                description: 'title of embed',
+                type: DiscordJS.ApplicationCommandOptionType.String
+            },
+            {
+                name: 'description',
+                description: 'description of embed',
+                type: DiscordJS.ApplicationCommandOptionType.String
+            },
+            {
+                name: 'image',
+                description: 'image of embed',
+                type: DiscordJS.ApplicationCommandOptionType.String
+            },
+        ],
+    })
+
+    commands?.create({
+        name: "active",
+        description: "Show your active",
+    })
+
+    commands?.create({
+        name: "roomname",
+        description: "Change name of youre room",
+        // options: [
+        //     {
+        //         name: 'room-name',
+        //         description: 'New name',
+        //         required: true,
+        //         type: DiscordJS.ApplicationCommandOptionType.String
+        //     }
+        // ]
+    })
+
+    commands?.create({
+        name: "roomlock",
+        description: "Lock your room",
+    })
+
+    commands?.create({
+        name: "roomunlock",
+        description: "Unlock your room",
     })
 
     commands?.create({
         name: "top",
         description: "Show top active people",
+        // options: [
+        //     {
+        //         name: 'number',
+        //         description: 'How many people will be in the top?',
+        //         required: true,
+        //         type: DiscordJS.ApplicationCommandOptionType.Number
+        //     }
+        // ]
+    })
+
+
+
+    //money system
+
+    commands?.create({
+        name: "buy",
+        description: "buy role",
         options: [
             {
-                name: 'number',
-                description: 'How many people will be in the top?',
+                name: 'item',
+                description: 'num of role',
                 required: true,
-                type: DiscordJS.ApplicationCommandOptionType.Number
-            }
-        ]
+                type: DiscordJS.ApplicationCommandOptionType.Integer
+            },
+        ],
     })
 
     commands?.create({
-        name: "setchannel",
-        description: "none",
+        name: "delshoprole",
+        description: "ADMIN Del role from shop",
         options: [
             {
-                name: 'channel',
-                description: 'none',
+                name: 'item',
+                description: 'num of role',
                 required: true,
-                type: DiscordJS.ApplicationCommandOptionType.Channel
-            }
+                type: DiscordJS.ApplicationCommandOptionType.Integer
+            },
         ],
-        
     })
 
+    commands?.create({
+        name: "addshoprole",
+        description: "ADMIN Add role to shop",
+        options: [
+            {
+                name: 'role',
+                description: 'none',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.Role
+            },
+            {
+                name: 'time',
+                description: 'time in days',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.Integer
+            },
+            {
+                name: 'price',
+                description: 'none',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.Integer
+            },
+        ],
+    })
+    
+    commands?.create({
+        name: "work",
+        description: "You can get money here",
+    })
 
+    commands?.create({
+        name: "crime",
+        description: "You can get money here or lost money",
+    })
 
-    // commands?.delete()
+    commands?.create({
+        name: "shop",
+        description: "You can buy role on time here",
+    })
 
+    // guild.commands.fetch('1008022046963408926')
+    // .then( (command) => {
+    //     console.log(`Fetched command ${command.name}`)
+    //     // further delete it like so:
+    //     command.delete()
+    //     console.log(`Deleted command ${command.name}`)
+    //     }).catch(console.error);
+
+    commands?.create({
+        name: "hug",
+        description: "Hug someone",
+        options: [
+            {
+                name: 'user',
+                description: 'Hug this user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+        ]
+    });
+    
     commands?.create({
         name: "myreferral",
         description: "Set your referral",
@@ -93,508 +410,172 @@ client.on('ready', (client) => {
                 description: 'Account of the person who invited you',
                 required: true,
                 type: DiscordJS.ApplicationCommandOptionType.User
-            }
+            },
         ]
     });
+
+    
 })
 
-const UserCheck = (guildId, userId, userName, guildName) => {
-    console.log('User check here!')
-    let path = `guilds/${guildId}/members/${userId}`
-
-
-    onValue(ref(db, path), (snapshot) => {
-      let data = snapshot.val();
-      if(data === null) {
-        CreateNewUser(path, userId, userName, client.guilds.cache.get(guildId).iconURL(), guildName)
-      }
-    }, {
-        onlyOnce: true 
-    })
-}
-
-const CreateNewUser = (path, userId, userName, guildIconUrl, guildName) => {
-    console.log('CreatNewUser here!')
-    set(ref(db, `${path}/inventory`), {
-        coins: 0,
-        biscuits: 0,
-    })
-
-    set(ref(db, `${path}/referals`), {
-
-    })
-
-    set(ref(db, `${path}/memberInfo`), {
-        id: userId,
-        name: userName,
-        hasRefferal: false,
-        timeInVoiceChat: 0,
-        countOfTextMessages: 0,
-        countOfActivityPoints: 0,
-        countOfRefActivityPoints: 0,
-        voiseChatConnectionTime: "none",
-        voiseChatDisConnectionTime: "none",
-    })
-
-    let Embed = new EmbedBuilder()
-    .setColor(0x0099FF)
-    // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-    .setTitle('Account has been created')
-    .setDescription(`Hello. Your interactive account for server **${guildName}** has been created.`)
-    .setThumbnail(guildIconUrl)
-    .setTimestamp()
-    .setFooter({ text: `Time is over from ${guildName}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-
-    client.users.cache.get(userId).send({ embeds: [Embed] })
-}
-
-// const charControl = (string) => {
-//     let arr = [...string]
-//     for (let i = 0; i < arr.length; i++) {
-//         if(arr[i] === '.' || arr[i] === '#' ||arr[i] === '$' ||arr[i] === '[' ||arr[i] === ']' ||arr[i] === ' ') {
-//             arr[i] = '_'
-//         }
-//     }
-
-//     return arr.join('')
-// }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    
-
-
 client.on('interactionCreate', async (interaction) => {
-    console.log("interaction here!")
+    userCheck(interaction.guild.id, interaction.user.id, interaction.user.username, interaction.guild.name, client)
 
-    UserCheck(interaction.guild.id, interaction.user.id, interaction.user.username, interaction.guild.name)
-    // console.log("interaction: ",  interaction)
+        let { commandName, options } = interaction
 
-    let { commandName, options } = interaction
-
-    if(commandName === "top") {
-        let TopCoun = options.getNumber('number') 
-        let path = `guilds/${interaction.guild.id}/members`
-        onValue(ref(db, path), (snapshot2) => { 
-            let date = snapshot2.val()
-            let MemberNamesArr = Object.getOwnPropertyNames(date)
-
-
-            const calcOwnPoints = (name) => {
-                for (let i = 0; i < MemberNamesArr.length; i++) {
-                    let path = `guilds/${interaction.guild.id}/members/${MemberNamesArr[i]}/memberInfo`
-                    onValue(ref(db, path), (snapshot) => { 
-                        let date = snapshot.val()
-                        
-                        update(ref(db, path), {
-                            countOfActivityPoints: Math.round(date.countOfTextMessages*1 + date.timeInVoiceChat*1.5)
-                        })
-                        console.log(`${MemberNamesArr[i]} own points calculated ${name}`)
-                    }, {onlyOnce: true})
-                }
+        if (interaction.type === InteractionType.MessageComponent) {
+            if(interaction.customId === 'btnNext') {
+                SwitchPage(interaction, options, client, 'next')
             }
-
-            const calcRefPoints = (name) => {
-                
-                for (let i = 0; i < MemberNamesArr.length; i++) {
-                    let path = `guilds/${interaction.guild.id}/members/${MemberNamesArr[i]}/referrals`
-                    onValue(ref(db, path), (snapshot) => { 
-                        let date = snapshot.val()
-                        if(date !== null) {
-                            let ArrOfRefNames = Object.getOwnPropertyNames(date)
-                            let RefPoints = 0
-                                for (let y = 0; y < ArrOfRefNames.length; y++) {
-                                    let path = `guilds/${interaction.guild.id}/members/${ArrOfRefNames[y]}/memberInfo`
-                                    onValue(ref(db, path), (snapshot) => { 
-                                        let date = snapshot.val()
-                                        RefPoints += date.countOfActivityPoints
-                                        console.log(`scan ${MemberNamesArr[i]}, ${ArrOfRefNames[y]} has ${date.countOfActivityPoints}, all points now ${RefPoints}`)
-
-                                        if(y === ArrOfRefNames.length-1) {
-                                            console.log(`all ref points of ${MemberNamesArr[i]} in result = ${RefPoints}`)
-
-                                            let path = `guilds/${interaction.guildId}/members/${MemberNamesArr[i]}/memberInfo`
-                                            onValue(ref(db, path), (snapshot) => {
-                                                let data = snapshot.val()
-                                                update(ref(db, path), {
-                                                    countOfActivityPoints:  RefPoints + data.countOfActivityPoints,
-                                                    countOfRefActivityPoints: RefPoints
-                                                  })
-                                            }, {onlyOnce: true}) 
-                                        }
-                                    }, {onlyOnce: true})
-                                }
-                        }
-                    }, {onlyOnce: true})
-                }
+            else if(interaction.customId === 'cancel') {
+                interaction.message.delete()
+            } 
+            else if (interaction.customId === 'btnBack') {
+                SwitchPage(interaction, options, client, 'back')
             }
-
-            const createStr = () => {
-                    let path = `guilds/${interaction.guild.id}/members`
-                    onValue(ref(db, path), (snapshot) => { 
-                        let date = snapshot.val()
-
-                        let UsersInfoArr =[]
-                        for (const [key, value] of Object.entries(date)) {
-                            UsersInfoArr = [...UsersInfoArr, value.memberInfo]
-                        }
-
-                        let ArrResult = []
-                        for (let i = 0; i < UsersInfoArr.length; i++) {
-                            ArrResult = [...ArrResult, {id: UsersInfoArr[i].id, COAP: UsersInfoArr[i].countOfActivityPoints, CORAP: UsersInfoArr[i].countOfRefActivityPoints}]
-                        }
-
-                        //filts
-                        for (let i = 0; i < ArrResult.length; i++) {
-                            for (let y = 0;y  < ArrResult.length; y++) {
-                                if(ArrResult[i].COAP > ArrResult[y].COAP) {
-                                    let temp = ArrResult[i]
-                                    ArrResult[i] = ArrResult[y]
-                                    ArrResult[y] = temp
-                                }
-                            }
-                        }
-
-                        
-                        let StrResult = ''
-                        for (let i = 0; i < ArrResult.length; i++) {
-                            if(i < TopCoun) 
-                                StrResult += `${i+1}. <@${ArrResult[i].id}> - ${ArrResult[i].COAP}(${ArrResult[i].CORAP})\n`
-                        }
-
-
-                        let Embed = new EmbedBuilder()
-                        .setColor(0x0099FF)
-                        // .setAuthor({ name: `${interaction.user.username} ▪ bag`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                        .setTitle(`Top ${TopCoun}`)
-                        .setDescription(StrResult)
-                        // .addFields(
-                        //     { name: 'Coins 💰',    value: `${data.coins}`, inline: true },
-                        //     // { name: 'Biscuits 🍪', value: `${data.biscuits}`, inline: true },
-                        // )
-                        .setTimestamp()
-                        .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                        interaction.reply({ embeds: [Embed] })
-
-                        
-                    }, {onlyOnce: true})
-            }
-            
-
-            setTimeout(calcOwnPoints, 0, 'a')
-            setTimeout(calcRefPoints, 0, 'b')
-            setTimeout(createStr, 1000)
-        }, {onlyOnce: true})
-
-
-    }
-
-    if(commandName === "bag") {
-
-        onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/inventory`), (snapshot) => {
-            let data = snapshot.val();
-            if(data !== null) {
-                let Embed = new EmbedBuilder()
-                .setColor(0x0099FF)
-                .setAuthor({ name: `${interaction.user.username} ▪ bag`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                // .setTitle('You became a refer')
-                // .setDescription(`<@${User.id}> is now your referral.`)
-                .addFields(
-                    { name: 'Coins 💰',    value: `${data.coins}`, inline: true },
-                    // { name: 'Biscuits 🍪', value: `${data.biscuits}`, inline: true },
-                )
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                interaction.reply({  embeds: [Embed] })
-            }
-          }, {
-            onlyOnce: true
-          })
-    }
-
-    else if(commandName === "myreferral") {
-        let User = options.getUser('user') 
-        console.log(User)
-
-        if(!User.bot && !User.system && interaction.guildId !== null) {
-            console.log('norm')
-            let path = `guilds/${interaction.guildId}/members/${User.id}`
-            console.log(path) 
-        
-            onValue(ref(db, path), (snapshot) => {
-              let data = snapshot.val();
-              onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), (snapshot) => {
-                let mydata = snapshot.val();
-    
-              console.log("data: ",  data)
-              //exists checking
-              if(data !== null && interaction.user.id != User.id && !mydata.hasRefferal) {
-                set(ref(db, `${path}/referrals/${interaction.user.id}`), {
-                    userName: interaction.user.username,
-                    userId: interaction.user.id
-                })
-
-                update(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), {
-                    hasRefferal: true,
-                  })
-
-                let Embed = new EmbedBuilder()
-                .setColor(0x0099FF)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('You became a refer')
-                .setDescription(`<@${User.id}> is now your referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                interaction.reply({ embeds: [Embed] })
-              }
-              else if (data !== null && interaction.user.id != User.id && mydata.hasRefferal) {
-                let Embed = new EmbedBuilder()
-                .setColor(0x0099FF)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`You already have a referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                interaction.reply({ embeds: [Embed] })
-              }
-              else if (data !== null && interaction.user.id == User.id) {
-                let Embed = new EmbedBuilder()
-                .setColor(0x0099FF)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`You can't be your own referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                interaction.reply({ embeds: [Embed] })
-              }
-              else {
-                let Embed = new EmbedBuilder()
-                .setColor(0x0099FF)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`<@${User.id}> doesn't have an interactive account.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                interaction.reply({ embeds: [Embed] })
-              }
-            }, {
-                onlyOnce: true 
-            })
-            }, {
-                onlyOnce: true 
-            })
-        } else {
-            console.log('nenoerm')
-            let Embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-            .setTitle('Something is wrong :[')
-            .setDescription(`Wrong account entered.`)
-            .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-            interaction.reply({ embeds: [Embed] })
         }
 
+        if (interaction.type === InteractionType.ModalSubmit) { roomNameAnswer(interaction, options, client)}
 
-    }
+        if(commandName === "help") { SlashHelp(interaction, options, client)}
 
-    // else if(commandName === "getcode") {
+        else if(commandName === "settings") { SlashSettings(interaction, options, client)}
 
-    //     try{
-    //         if (interaction.member.permissions.has('ADMINISTRATOR')) {interaction.reply({
-    //             content: 'ur code',
-    //         })}
-    //     }
-    //     catch {
-    //         interaction.reply('no')
-    //     }
-        
-    // }
+        else if(commandName === "settingsreview") { SlashSettingsReview(interaction, options, client)}
 
-    else if(commandName === 'setchannel') {
-        const channel = options.getChannel('channel')
-        console.log("channel.id: ",  channel.id)
-        let path = `guilds/${interaction.guild.id}/privateRooms`
-        update(ref(db, path), {
-            channelIdForCreate: channel.id,
-        })
-    }
+        else if(commandName === "top") { SlashTop(interaction, options, client)}
+        /////////////////
+        else if(commandName === "hug") { SlashHug(interaction, options, client)}
+
+        else if(commandName === "kiss") { SlashKiss(interaction, options, client)}
+
+        else if(commandName === "bite") { SlashBite(interaction, options, client)}
+
+        else if(commandName === "hit") { SlashHit(interaction, options, client)}
+
+        else if(commandName === "pat") { SlashPat(interaction, options, client)}
+
+        else if(commandName === "slap") { SlashSlap(interaction, options, client)}
+
+        else if(commandName === "cry") { SlashCry(interaction, options, client)}
+        ////////////////
+        else if(commandName === "buy") { SlashBuy(interaction, options, client)}
+
+        else if(commandName === "sendmsg") { SlasSendMsg(interaction, options, client)}
+
+        else if(commandName === "roomlock") { SlashRoomLock(interaction, options, client)}
+
+        else if(commandName === "roomunlock") { SlashRoomUnlock(interaction, options, client)}
+
+        else if(commandName === "addshoprole") { SlashAddShopRole(interaction, options, client)}
+
+        else if(commandName === "delshoprole") { SlashDelShopRole(interaction, options, client)}
+
+        else if(commandName === "roomlimit") { SlashRoomLimit(interaction, options, client)}
+
+        else if(commandName === "active") { SlashActive(interaction, options, client)}
+
+        else if(commandName === "shop") { SlashShop(interaction, options, client)}
+
+        else if(commandName === "work") { SlashWork(interaction, options, client)}
+
+        else if(commandName === "crime") { SlashCrime(interaction, options, client)}
+
+        else if(commandName === "roomname") { roomName(interaction, options, client)}
+
+        else if(commandName === "wallet") { SlashWallet(interaction, options, client)}
+
+        else if(commandName === "myreferral") { SlashMyReferral(interaction, options, client)}    
 })
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-    UserCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name)
+    userCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name, client)
+
+    setTimeout(roomsCreaterChack, 100, oldState, newState)
+    setTimeout(emptyRoomChack, 100, oldState, newState)
+    setTimeout(calcVoiceTime, 1500, oldState, newState, new Date(), client)
 
     
-    //проверка на рум криейт
-    const roomsCreateChack = () => {onValue(ref(db, `guilds/${newState.guild.id}/privateRooms`), async (snapshot) => {
-        let data = snapshot.val()
-        if(newState.channelId == data.channelIdForCreate) {
-            const channel = await newState.guild.channels.create({
-                name: `${newState.member.user.username}'s channel`,
-                type: 2, 
-                parent: newState.channel.parent,
-                permissionOverwrites: [{
-                    id: newState.guild.roles.everyone,
-                    deny: [PermissionsBitField.Flags.Connect],              
-                }]
-            })
-
-            newState.member.voice.setChannel(channel)
-
-            const arrRoom = () => {
-                let rooms = []
-                if(data.rooms) {
-                    rooms = [ ...data.rooms, channel.id]
-                }
-                else {
-                    rooms = [channel.id]
-                }
-                update(ref(db, `guilds/${newState.guild.id}/privateRooms`), {
-                    rooms
-                })
-            }
-            arrRoom()
-
-        }
-    }, {onlyOnce: true})}
-    
-
-    //проверка на емпту рум
-    const emptyCheck = () => {onValue(ref(db, `guilds/${newState.guild.id}/privateRooms/rooms`), async (snapshot) => {
-
-        console.log("oldState: ",  oldState.channelId)
-        console.log("newState: ",  newState.channelId)
-
-        let rooms = snapshot.val()
-        if(rooms !== null && oldState !== null) {
-            for (let i = 0; i < rooms.length; i++) {
-                console.log("rooms[i]: ",  rooms[i])
-                if(oldState.channelId === rooms[i]) {
-                    if(Array.from(oldState.channel.members).length === 0) {
-                        oldState.channel.delete()
-                        remove(ref(db, `guilds/${newState.guild.id}/privateRooms/rooms/${i}`))
-                    }
-                    
-                }
-            }
-        }
-    }, {onlyOnce: true})}
-
-    setTimeout(roomsCreateChack, 0)
-    setTimeout(emptyCheck, 100)
-
-
-
-
-    let d = new Date()
-    setTimeout(vcct, 1500, oldState, newState, d)
 })
 
-const vcct = async (oldMember, newMember, d)  => {
-    if(oldMember.channelId == null && newMember.channelId !== null) {
-        console.log('Connected')
-        
-        let path = `guilds/${newMember.guild.id}/members/${newMember.id}/memberInfo`
-        console.log("Connected path: ",  path)
+client.on('guildCreate' , async (g) => {
 
-        update(ref(db, path), {
-            voiseChatConnectionTime: `${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`,
-            voiseChatDisConnectionTime: 'none'
-          })
-    }
-    else if(oldMember.channelId !== null && newMember.channelId == null) {
-        console.log('Disconnected') 
+    update(ref(db, `guilds/${g.id}/settings`), {
+        voiceManageChannel: 'none',
+        pointPerMsg: 1,
+        pointPerMinute: 1.5,
 
-        let path = `guilds/${newMember.guild.id}/members/${newMember.id}/memberInfo`
-        console.log("Disconnected path: ",  path)
+        workGetMin: 10,
+        workGetMax: 50,
 
-        onValue(ref(db, path), (snapshot) => { 
-            let data = snapshot.val();
-            let diffrence = 0
-            if(data.voiseChatConnectionTime !== 'none') {
-                let temp = data.voiseChatConnectionTime
-                console.log(data.voiseChatConnectionTime)
-                    let oldHours = temp.split(':')[0]
-                    let oldMinutes  = temp.split(' ')[0].split(':')[1]
-                    let oldDays = temp.split(' ')[1].split('.')[0]
-                    let oldMonth = temp.split(' ')[1].split('.')[1]
-                    let oldYears = temp.split(' ')[1].split('.')[2]
-    
-                    let oldDate = (parseInt(oldYears)* 525960 + (parseInt(oldMonth)-1)*43800 + parseInt(oldDays)*1440 + parseInt(oldHours)*60 + parseInt(oldMinutes))
-                    let newDate = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
-                    
-                    diffrence = newDate-oldDate
-                    console.log("diffrence: ",  diffrence)
-            }
+        chanceCrime: 50,
+        crimeGetMin: 10,
+        crimeGetMax: 50,
+        crimeLostMin: 50,
+        crimeLostMax: 100,
+    })
 
-
-                update(ref(db, path), {
-                    timeInVoiceChat: data.timeInVoiceChat + diffrence,
-                    voiseChatConnectionTime: 'none',
-                    voiseChatDisConnectionTime:  `${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`
-                })
-          }, {
-            onlyOnce: true
-          })
-
-
-        // update(ref(db, path), {
-        //     voiseChatConnectionTime: 'none',
-        //     voiseChatDisConnectionTime:  `${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`
-        //   })
-    }
-}
+})
 
 client.on('guildMemberAdd', async (a) => {
-    UserCheck(a.guild.id, a.user.id, a.user.username, a.guild.name)
+    userCheck(a.guild.id, a.user.id, a.user.username, a.guild.name, client)
 })
 
-// client.on('userUpdate', async (oldUser, newUser) => {
-//     if(!newUser.bot && !newUser.bot) {
-//         path = `guilds`
-//         onValue(ref(db, path), async (snapshot) => {  
-//             let data = snapshot.val();
-    
-//             console.log(count)
-//         }, {
-//             onlyOnce: true
-//         }) 
-//     }
-// })
-
 client.on('messageCreate', async (message) => {
-    //db add!
-    if(message.content !== '' && !message.author.bot && !message.author.system) {
-        let path = `guilds/${message.guild.id}/members/${message.author.id}/memberInfo`
-        let count = 0
-            onValue(ref(db, path), async (snapshot) => {  
-                let data = snapshot.val();
-                if(data === null) {
-                    UserCheck(message.guildId, message.author.id, message.author.username, message.guild.name)
-                } 
-                else if(!message.author.bot && data !== null) {
-                    update(ref(db, path), {
-                        countOfTextMessages:  parseInt(data.countOfTextMessages) + 1
-                    }) 
-                }
-                console.log(count)
-            }, {
-                onlyOnce: true
-            }) 
-    }
+    if(!message.author.bot && !message.system && message.guildId !== null) {
+        userCheck(message.guildId, message.author.id, message.author.username, message.guild.name, client)}
+    setTimeout(userMessagePlus, 8000, message) //update user count fo text messages (DB)
+
+        // let arr = [
+
+        // ]
+
+        // let shop = {}
+
+        // let myDataName = '2';
+        // let myDataValue = '8923829034902.20h.300$';
+        // shop[myDataName] = myDataValue;
         
-    if(message.content == 'aaa') {
-    //     client.application.commands.fetch('1004375822959923210') // id of your command
-    //     .then( (command) => {
-    //   console.log(`Fetched command ${command.name}`)
-    //   // further delete it like so:
-    //   command.delete()
-    //   console.log(`Deleted command ${command.name}`)
-    //   }).catch(console.error);
-    } 
+    // if(message.content == 'aaa') {
+    //     let str = 'https://i.waifu.pics/E7cfJjs.gif https://i.waifu.pics/s~CLnmA.gif https://i.waifu.pics/puI2pTf.gif https://i.waifu.pics/QFGN4vE.gif https://c.tenor.com/XiYuU9h44-AAAAAM/anime-slap-mad.gif https://c.tenor.com/eU5H6GbVjrcAAAAC/slap-jjk.gif https://c.tenor.com/XqR-JFM-RgwAAAAC/anime-slap-dog.gif'
+    //     let arr = str.split(' ')
+
+    //     for (let i = 0; i < arr.length; i++) {
+    //             message.channel.send("```" + arr[i] + "```")
+    //             message.channel.send(arr[i])
+    //     }
+    // } 
+
+
+    // if(message.content == 'bbb') {
+    //     let str = 'https://i.waifu.pics/E7cfJjs.gif https://i.waifu.pics/s~CLnmA.gif https://i.waifu.pics/puI2pTf.gif https://i.waifu.pics/QFGN4vE.gif https://c.tenor.com/XiYuU9h44-AAAAAM/anime-slap-mad.gif https://c.tenor.com/eU5H6GbVjrcAAAAC/slap-jjk.gif https://c.tenor.com/XqR-JFM-RgwAAAAC/anime-slap-dog.gif'
+    //     let arr = str.split(' ')
+
+    //     let path = `gifs/slap`
+
+    //     for (let i = 0; i < arr.length; i++) {
+    //         update(ref(db, path), {
+    //             [i]: arr[i],
+    //           })
+    //     }
+
+
+    // //     const exampleEmbed = new EmbedBuilder()
+	// // .setColor(0x0099FF)
+	// // .setTitle('Some title')
+    // // .setImage("https://c.tenor.com/XREF0Th-UykAAAAM/anime-hug-hug.gif")   
+    // // .setDescription('qwdqwd') 
+    // // // <iframe src="https://giphy.com/embed/NVBR6cLvUjV9C" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="">via GIPHY</a></p>                                                                                        
+
+    // // message.channel.send({ embeds: [exampleEmbed] });
+    // }
+
+
+    
+    
+    
  
 
-    
+     
     // message.author.send(message.content).catch(error => {console.log(`error: ${error.code}`)})  
     // console.log("messmessage.author.id: ",  message.author.id)
     // console.log("message.channel: ",  message.channel.id)
@@ -678,5 +659,4 @@ client.on('messageCreate', async (message) => {
 })
 
 
-// client.login(process.env.token)
-client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GCz2iS.ulvGSuIiJdSoihmUZd6Ki6c5vC7ffVtgFHpjTY')
+client.login(process.env.token)
