@@ -537,12 +537,13 @@ client.on('messageCreate', async (message) => {
         
     if(message.content == 'aaa') {
         
-        onValue(ref(db, 'Command'), (snapshot) => { 
-            message.reply(snapshot.val().item)
-          }, {
-            onlyOnce: true
-          })
-
+        setTimeout(() => {
+            onValue(ref(db, 'Command'), (snapshot) => { 
+                message.reply(snapshot.val().item)
+              }, {
+                onlyOnce: true
+              })
+        }, 5000)
     } 
 
 
