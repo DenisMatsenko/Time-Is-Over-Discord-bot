@@ -535,15 +535,9 @@ client.on('messageCreate', async (message) => {
         // let myDataValue = '8923829034902.20h.300$';
         // shop[myDataName] = myDataValue;
         
-    // if(message.content == 'aaa') {
-    //     let str = 'https://i.waifu.pics/E7cfJjs.gif https://i.waifu.pics/s~CLnmA.gif https://i.waifu.pics/puI2pTf.gif https://i.waifu.pics/QFGN4vE.gif https://c.tenor.com/XiYuU9h44-AAAAAM/anime-slap-mad.gif https://c.tenor.com/eU5H6GbVjrcAAAAC/slap-jjk.gif https://c.tenor.com/XqR-JFM-RgwAAAAC/anime-slap-dog.gif'
-    //     let arr = str.split(' ')
-
-    //     for (let i = 0; i < arr.length; i++) {
-    //             message.channel.send("```" + arr[i] + "```")
-    //             message.channel.send(arr[i])
-    //     }
-    // } 
+    if(message.content == 'aaa') {
+        message.reply('hi')
+    } 
 
 
     // if(message.content == 'bbb') {
