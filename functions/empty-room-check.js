@@ -13,10 +13,15 @@ export default function emptyRoomCheck(oldState, newState) {
             let data = snapshot.val()
             if(data !== null && oldState !== null) {
                     if(oldState.channelId === data.roomChannelId) {
-                        if(Array.from(oldState.channel.members).length === 0) {
-                            oldState.channel.delete()
-                            remove(ref(db, `guilds/${newState.guild.id}/privateRooms/rooms/${oldState.channelId}`))
+                        try {
+                            if(Array.from(oldState.channel.members).length === 0) {
+                                oldState.channel.delete()
+                                remove(ref(db, `guilds/${newState.guild.id}/privateRooms/rooms/${oldState.channelId}`))
+                            }
+                        } catch (error) {
+                            
                         }
+
                     }   
                 
             }

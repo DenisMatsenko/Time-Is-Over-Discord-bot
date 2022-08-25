@@ -23,6 +23,10 @@ export default async function roomsCreaterCheck(oldState, newState) {
                             id: newState.guild.roles.everyone,
                             [PrivateRoomStat === 'lock' ? 'deny' : 'allow']: [PermissionsBitField.Flags.Connect],      
                         },
+                        {
+                            id: newState.member.id,
+                            allow:  [PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.ViewChannel],
+                        }
                         ]
                     })
                     channel.setUserLimit(PrivateRoomLimit)

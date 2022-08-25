@@ -38,6 +38,7 @@ import SlashCry from './functions/interaction/slash-cry.js'
 import SlashHelp from './functions/slash/slash-help.js'
 import SlashSettings from './functions/slash/slash-settings.js'
 import SlashSettingsReview from './functions/slash/slash-settings-review.js'
+import RoomDeleteCheck from './functions/room-delete-check.js'
 
 
 
@@ -493,9 +494,12 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
     setTimeout(roomsCreaterChack, 100, oldState, newState)
     setTimeout(emptyRoomChack, 100, oldState, newState)
     setTimeout(calcVoiceTime, 1500, oldState, newState, new Date(), client)
-
-    
 })
+
+client.on('channelDelete', async (channel) => {
+    RoomDeleteCheck(channel)
+})
+
 
 client.on('guildCreate' , async (g) => {
 
@@ -659,5 +663,5 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-client.login(process.env.token)
-// client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
+// client.login(process.env.token)
+client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')

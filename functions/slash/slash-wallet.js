@@ -14,7 +14,7 @@ export default function SlashWallet(interaction, options, client) {
             .setTitle(`**Coins**: ${data.coins}`)
             // .setTimestamp()
             // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-            interaction.reply({  embeds: [Embed] })
+            interaction.reply({  embeds: [Embed] }) 
         }
       }, {
         onlyOnce: true

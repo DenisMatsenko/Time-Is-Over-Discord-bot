@@ -33,7 +33,7 @@ export default function SlashWork(interaction, options, client) {
                     .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
                     // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
                     .setTitle('You already worked today.')
-                    // .setTimestamp()
+                    // .setTimestamp() 
                     // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
                     interaction.reply({  embeds: [Embed] })
             } else {

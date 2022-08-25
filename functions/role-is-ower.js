@@ -20,29 +20,26 @@ export default async function roleIsOwer(client) {
                                 try {
                                     if(client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2])) {
                                         client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).roles.remove(trarr[y].split('.')[1])
-                                        Log(client.guilds.cache.get(guildsArr[i]), client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).user, 'Role is over', 'role removed')
+                                        
                                     }      
                                 } catch (error) {
                                     Log(client.guilds.cache.get(guildsArr[i]), client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).user, 'Role is over', 'CRASHED')
                                 }
                                 
-                                // // console.log(client.guilds.cache.get(guildsArr[i]).members.fetch(trarr[y].split('.')[2]))
 
-
-                                // const guild = client.guilds.cache.get(guildsArr[i]);
-                                // let member = guild.members.cache.get(trarr[y].split('.')[2]);
-
-                                // console.log("guild: ",  guild.name)
-                                // console.log("member: ",  member)
-
-                                // member.removeRole(trarr[y].split('.')[1])
-                                // .catch(console.error);
-
-
-                                // client.guilds.cache.get(guildsArr[i]).members.fetch(trarr[y].split('.')[2]).removeRole(trarr[y].split('.')[1])
-                                // .catch(console.error)
                                 remove(ref(db, `guilds/${guildsArr[i]}/timeRoles/${y}`))
+                                Log(client.guilds.cache.get(guildsArr[i]), client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).user, 'Role is over', 'role removed')
 
+                                let Embed = new EmbedBuilder()
+                                .setColor(0x3a60b5)
+                                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
+                                .setTitle(`Role has been removed`)
+                                .setDescription(`Hello. Your time role **«${client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).roles.cache.get(trarr[y].split('.')[1]).name}»** has been removed on the **${client.guilds.cache.get(guildsArr[i]).name}**!`)
+                                .setThumbnail(client.guilds.cache.get(guildsArr[i]).iconURL())
+                                .setTimestamp()
+                                .setFooter({ text: `Time is over from ${client.guilds.cache.get(guildsArr[i]).name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                            
+                                client.users.cache.get(client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).id).send({ embeds: [Embed] })    
                             }                 
                         }
                     }
