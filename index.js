@@ -533,7 +533,7 @@ client.on('guildCreate' , async (guild) => {
     .setURL('https://discord.gg/rEeW7Rs92q')
     // .setAuthor({ name: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg', url: 'https://discord.gg/rEeW7Rs92q' })
     .setDescription(`
-        I can help automate the economy, private rooms management, members activity tracker, members interaction and improve the communication experience.
+        I can help automate the economy, private rooms management, track members activity, members interactions and improve the communication experience.
 
         Visit **Time is over support server** (link below), there will be published news and polls on my improvement!
 
