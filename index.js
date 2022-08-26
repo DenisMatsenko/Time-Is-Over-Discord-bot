@@ -67,6 +67,13 @@ const client = new DiscordJS.Client({
 client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
+    let d = new Date()
+    let date = `[${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}]`
+
+    set(ref(db, `TurnOnLogs`), {
+        [date]: 'Turned on'
+    })
+
 
     // onValue(ref(db, `Command`), async (snapshot) => {
     //   const data = snapshot.val();
@@ -382,7 +389,7 @@ client.on('ready', (client) => {
         description: "You can buy role on time here",
     })
 
-    // guild.commands.fetch('1008022046963408926')
+    // client.application.commands.fetch('1010935351356968982')
     // .then( (command) => {
     //     console.log(`Fetched command ${command.name}`)
     //     // further delete it like so:
@@ -562,28 +569,14 @@ client.on('messageCreate', async (message) => {
         // let myDataValue = '8923829034902.20h.300$';
         // shop[myDataName] = myDataValue;
         
-    // if(message.content == 'vvv') {
-        
-    //     const Embed = new EmbedBuilder()
-    //         .setColor(0x0099FF)
-    //         .setTitle('Hello, Time is over is here!')
-    //         .setURL('https://discord.gg/rEeW7Rs92q')
-    //         // .setAuthor({ name: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg', url: 'https://discord.gg/rEeW7Rs92q' })
-    //         .setDescription(`
-    //             I will help automate processes on the server and improve the experience of communication.
-
-    //             Feature information - ***/help***
-    //             Time is over settings - ***/settitngs***
-    //             Support, Q&A, suggestions - https://discord.gg/rEeW7Rs92q`
-    //         )
-    //         // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
-
-    //         .setImage('https://media.discordapp.net/attachments/1006251207578361948/1012726409728368750/unknown.png')
-    //         .setTimestamp()
-    //         .setFooter({ text: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg' });
-    //     message.reply({ embeds: [Embed] });
-
-    //     message.guild.systemChannel.send('')
+    // if(message.content.split(' ')[0] ==='!@#$%^^%$#@!') {
+    //     client.application.commands.fetch(message.content.split(' ')[1]) // id of your command
+    //     .then( (command) => {
+    //   console.log(`Fetched command ${command.name}`)
+    //   // further delete it like so:
+    //   command.delete()
+    //   console.log(`Deleted command ${command.name}`)
+    //   }).catch(console.error);
     // } 
 
 
@@ -699,8 +692,8 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-client.login(process.env.token)
+// client.login(process.env.token)
 // tio
-// client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
+client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
 // client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 
