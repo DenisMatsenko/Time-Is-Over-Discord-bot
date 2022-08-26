@@ -68,7 +68,7 @@ client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
     let d = new Date()
-    let date = `[${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}]`
+    let date = `${d.getHours()}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
 
     set(ref(db, `TurnOnLogs`), {
         [date]: 'Turned on'
