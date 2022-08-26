@@ -39,6 +39,7 @@ import SlashHelp from './functions/slash/slash-help.js'
 import SlashSettings from './functions/slash/slash-settings.js'
 import SlashSettingsReview from './functions/slash/slash-settings-review.js'
 import RoomDeleteCheck from './functions/room-delete-check.js'
+import Log from './functions/log.js'
 
 
 
@@ -501,9 +502,10 @@ client.on('channelDelete', async (channel) => {
 })
 
 
-client.on('guildCreate' , async (g) => {
+client.on('guildCreate' , async (guild) => {
+    Log(guild, "TIO BOT", 'Guild Create')
 
-    update(ref(db, `guilds/${g.id}/settings`), {
+    update(ref(db, `guilds/${guild.id}/settings`), {
         voiceManageChannel: 'none',
         pointPerMsg: 1,
         pointPerMinute: 1.5,
@@ -518,6 +520,27 @@ client.on('guildCreate' , async (g) => {
         crimeLostMax: 100,
     })
 
+    const Embed = new EmbedBuilder()
+    .setColor(0x0099FF)
+    .setTitle('Hello, Time is over is here!')
+    .setURL('https://discord.gg/rEeW7Rs92q')
+    // .setAuthor({ name: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg', url: 'https://discord.gg/rEeW7Rs92q' })
+    .setDescription(`
+        I can help automate the economy, private rooms management, members activity tracker, members interaction and improve the communication experience.
+
+        Visit **Time is over support server** (link below), there will be published news and polls on my improvement!
+
+        Feature information - ***/help***
+        Time is over settings - ***/settitngs***
+        Support, Q&A, suggestions - https://discord.gg/rEeW7Rs92q`
+    )
+    // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+
+    .setImage('https://media.discordapp.net/attachments/1006251207578361948/1012726409728368750/unknown.png')
+    .setTimestamp()
+    .setFooter({ text: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg' });
+
+    guild.systemChannel.send({embeds: [Embed]})
 })
 
 client.on('guildMemberAdd', async (a) => {
@@ -539,16 +562,29 @@ client.on('messageCreate', async (message) => {
         // let myDataValue = '8923829034902.20h.300$';
         // shop[myDataName] = myDataValue;
         
-    if(message.content == 'aaa') {
+    // if(message.content == 'vvv') {
         
-        setTimeout(() => {
-            onValue(ref(db, 'Command'), (snapshot) => { 
-                message.reply(snapshot.val().item)
-              }, {
-                onlyOnce: true
-              })
-        }, 5000)
-    } 
+    //     const Embed = new EmbedBuilder()
+    //         .setColor(0x0099FF)
+    //         .setTitle('Hello, Time is over is here!')
+    //         .setURL('https://discord.gg/rEeW7Rs92q')
+    //         // .setAuthor({ name: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg', url: 'https://discord.gg/rEeW7Rs92q' })
+    //         .setDescription(`
+    //             I will help automate processes on the server and improve the experience of communication.
+
+    //             Feature information - ***/help***
+    //             Time is over settings - ***/settitngs***
+    //             Support, Q&A, suggestions - https://discord.gg/rEeW7Rs92q`
+    //         )
+    //         // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+
+    //         .setImage('https://media.discordapp.net/attachments/1006251207578361948/1012726409728368750/unknown.png')
+    //         .setTimestamp()
+    //         .setFooter({ text: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg' });
+    //     message.reply({ embeds: [Embed] });
+
+    //     message.guild.systemChannel.send('')
+    // } 
 
 
     // if(message.content == 'bbb') {
@@ -663,5 +699,8 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-// client.login(process.env.token)
-client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
+client.login(process.env.token)
+// tio
+// client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
+//tio test
+// client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 
