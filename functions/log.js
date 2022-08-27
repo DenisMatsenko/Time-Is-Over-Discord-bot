@@ -4,6 +4,6 @@ import {set, ref, onValue, remove, update} from "firebase/database"
 
 export default async function Log(guild, user, event, note) {
     let d = new Date()
-    let date = `[${d.getHours()}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}]`
-    console.log(`${date} - ${event}${note ? ` - ${note}` : ``} | Guild: ${guild.name}(${guild.id}) | User: ${user !== 'TIO BOT' ? user.username : 'TIO BOT'}(${user !== 'TIO BOT' ? user.id : 'TIO BOT'})\n`)
+    let date = `[${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}]`
+    console.log(`${date} - ${event}${note ? ` - ${note}` : ``} | Guild: ${guild.name}(${guild.id}) | User: ${user !== 'TIO BOT' ? user.username : 'TIO BOT'}(${user !== 'TIO BOT' ? user.id : 'TIO BOT'})`)
 }
