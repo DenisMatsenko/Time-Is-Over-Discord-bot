@@ -18,7 +18,7 @@ export default async function SlashActive(interaction, options, client) {
                 { name: 'Activity points:',    value: `${data.countOfActivityPoints}`, inline: true },
             )
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             interaction.reply({  embeds: [Embed] })
         }
       }, {

@@ -33,7 +33,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                 .setTitle('You became a refer')
                 .setDescription(`<@${User.id}> is now your referral.`)
                 .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                 interaction.reply({ embeds: [Embed] })
               }
               else if (data !== null && interaction.user.id != User.id && mydata.hasRefferal) {
@@ -43,7 +43,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                 .setTitle('Something is wrong :[')
                 .setDescription(`You already have a referral.`)
                 .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                 interaction.reply({ embeds: [Embed] })
               }
               else if (data !== null && interaction.user.id == User.id) {
@@ -53,7 +53,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                 .setTitle('Something is wrong :[')
                 .setDescription(`You can't be your own referral.`)
                 .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                 interaction.reply({ embeds: [Embed] })
               }
               else {
@@ -63,7 +63,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                 .setTitle('Something is wrong :[')
                 .setDescription(`<@${User.id}> doesn't have an interactive account.`)
                 .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                 interaction.reply({ embeds: [Embed] })
               }
             }, {
@@ -79,7 +79,7 @@ export default async function SlashMyReferral(interaction, options, client) {
             .setTitle('Something is wrong :[')
             .setDescription(`Wrong account entered.`)
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             interaction.reply({ embeds: [Embed] })
         }
 }

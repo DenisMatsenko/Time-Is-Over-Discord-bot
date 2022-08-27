@@ -32,7 +32,7 @@ export default async function SlashShop(interaction, options, client)  {
             .setTitle(`Page 1`)
             .setDescription(strOfItems)
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
         
             const row = new ActionRowBuilder()
             .addComponents(
@@ -70,7 +70,7 @@ export default async function SlashShop(interaction, options, client)  {
             .setColor(0xbd3c3c)
             .setTitle(`Shop is empty now :[`)
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             interaction.channel.send({ embeds: [Embed]}).then(msg => {
                setTimeout(() => {msg.delete()}, 60000)})
         }

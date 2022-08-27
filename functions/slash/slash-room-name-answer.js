@@ -5,6 +5,10 @@ import Log from '../log.js';
 
 export default async function roomNameAnswer(interaction, options, client) {
   Log(interaction.guild, interaction.user, 'Room name answer')
+
+
+  interaction.update('** **')
+
   let answer = interaction.fields.getTextInputValue('roomname');
 
   let path = `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`
@@ -28,10 +32,10 @@ export default async function roomNameAnswer(interaction, options, client) {
     }
   }, {onlyOnce: true})
 
-  let Embed = new EmbedBuilder()
-  .setColor(0x3a60b5)
-  .setTitle(`Room name has been changed to ${answer}`)
-  .setTimestamp()
-  .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-  interaction.reply({ embeds: [Embed], ephemeral: true, })
+  // let Embed = new EmbedBuilder()
+  // .setColor(0x3a60b5)
+  // .setTitle(`Room name has been changed to ${answer}`)
+  // .setTimestamp()
+  // // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
+  // interaction.reply({ embeds: [Embed], ephemeral: true, })
 }

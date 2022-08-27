@@ -19,15 +19,9 @@ export default async function SlashHelp(interaction, options, client)  {
     ● ***/buy*** [_number_] - You buy an item under the entered _number_ for your coins.
     ● ***/wallet*** - Shows your wallet.
 
-    **Room management**
-    ● ***/roomname*** - Changes the name of your room. Changes are saved even after leaving the room.
-    ● ***/roomlimit*** - Changes the limit of your room. Changes are saved even after leaving the room.
-    ● ***/roomlock*** - Closes your room. Changes are saved even after leaving the room.
-    ● ***/roomunlock*** - Opens your room. Changes are saved even after leaving the room.
-
     **Activity**
     ● ***/top*** [_number_] - Shows the top active members of the server.
-    ● ***/setmyreferal*** [_@user_] - Make the _@user_ your referral, he will receive 20% of your activity points. Make your referral only the person who invited you to the server. You can use this command _only once!_
+    ● ***/myreferral*** [_@user_] - Make the _@user_ your referral, he will receive 20% of your activity points. Make your referral only the person who invited you to the server. You can use this command _only once!_
     ● ***/myactive*** - Shows the number of activity points, sent messages and minutes in voice chat.
 
     ! For one message you get **${data.pointPerMsg}** activity point, for one minute in voice chat you get **${data.pointPerMinute}** activity points.
@@ -50,7 +44,7 @@ export default async function SlashHelp(interaction, options, client)  {
         `, inline: true },
     )
     .setTimestamp()
-    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
     interaction.reply({  embeds: [Embed], ephemeral: true })
 
     }, {onlyOnce: true}) 

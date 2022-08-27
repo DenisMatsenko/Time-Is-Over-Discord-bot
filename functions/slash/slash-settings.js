@@ -44,7 +44,7 @@ export default function SlashSettings(interaction, options, client) {
     .setTitle(`Settings has been changed!`)
     .setDescription(`Use settings review.`)
     .setTimestamp()
-    // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+    // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
     interaction.reply({ embeds: [Embed], ephemeral: true })
     } else {
         let Embed = new EmbedBuilder()
@@ -52,7 +52,7 @@ export default function SlashSettings(interaction, options, client) {
         // .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
         .setTitle(`You are not an administrator!`)
         .setTimestamp()
-        .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+        .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
         interaction.reply({  embeds: [Embed], ephemeral: true })
     }
 }

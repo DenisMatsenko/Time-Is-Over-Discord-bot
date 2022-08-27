@@ -43,8 +43,6 @@ const CreateNewUser = (path, userId, userName, guildIconUrl, guildName, client, 
         countOfActivityPoints: 0,   
         countOfRefActivityPoints: 0,
         privateRoomName: `${userName}'s channel`,
-        privateRoomLimit: 15, 
-        privateRoomStat: `unlock`,
         voiseChatConnectionTime: "none",
         voiseChatDisConnectionTime: "none",
     })
@@ -58,5 +56,5 @@ const CreateNewUser = (path, userId, userName, guildIconUrl, guildName, client, 
     .setTimestamp()
     .setFooter({ text: `Time is over from ${guildName}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
 
-    client.users.cache.get(userId).send({ embeds: [Embed] })
+    client.users.cache.get(userId).send({ embeds: [Embed] }).catch((error) => {console.error(error)})
 }

@@ -51,7 +51,7 @@ export default async function SwitchPage(interaction, options, client, way)  {
             .setTitle(`Page ${pageNum}`)
             .setDescription(strOfItems)
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
 
 
             let row = new ActionRowBuilder()

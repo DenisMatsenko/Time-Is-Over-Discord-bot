@@ -14,8 +14,29 @@ export default async function SlashBuy(interaction, options, client)  {
         if(item) {
             onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem/coins`), (snapshot) => {
                 let money = snapshot.val()
-                if(money >= parseInt(item.split('.')[2])) {   
-                    client.guilds.cache.get(interaction.guildId).members.cache.get(interaction.user.id).roles.add(item.split('.')[0])
+                if(money >= parseInt(item.split('.')[2])) {
+
+                    let error = false
+                    client.guilds.cache.get(interaction.guildId).members.cache.get(interaction.user.id).roles.add(item.split('.')[0]).catch(() => {
+                        error = true
+
+
+                        if(error) {
+                            let Embed = new EmbedBuilder()
+                            .setColor(0xbd3c3c)
+                            .setTitle(`Something wrong :[`)
+                            .setTimestamp()
+                            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
+                            interaction.reply({ embeds: [Embed], ephemeral: true})
+                        } else {
+                            let Embed = new EmbedBuilder()
+                            .setColor(0x3a60b5)
+                            .setTitle(`Role successfully purchased!`)
+                            .setTimestamp()
+                            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
+                            interaction.reply({ embeds: [Embed], ephemeral: true})
+                        }
+                    })
                     
                     update(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem`), {
                         coins: money - parseInt(item.split('.')[2])
@@ -39,19 +60,15 @@ export default async function SlashBuy(interaction, options, client)  {
                     }, {onlyOnce: true})
 /////////////
 
-                    let Embed = new EmbedBuilder()
-                    .setColor(0x3a60b5)
-                    .setTitle(`Role successfully purchased!`)
-                    .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
-                    interaction.reply({ embeds: [Embed], ephemeral: true})
+
+
                 }
                 else {
                     let Embed = new EmbedBuilder()
                     .setColor(0xbd3c3c)
                     .setTitle(`You don't have enough coins :[`)
                     .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({ embeds: [Embed], ephemeral: true})
                 }
             }, {onlyOnce: true})
@@ -61,7 +78,7 @@ export default async function SlashBuy(interaction, options, client)  {
             .setColor(0xbd3c3c)
             .setTitle(`Something wrong :[`)
             .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             interaction.reply({ embeds: [Embed], ephemeral: true})
         }
         

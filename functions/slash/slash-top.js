@@ -108,7 +108,7 @@ export default function SlashTop(interaction, options, client) {
                     //     // { name: 'Biscuits 🍪', value: `${data.biscuits}`, inline: true },
                     // )
                     .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({ embeds: [Embed] })
 
                     

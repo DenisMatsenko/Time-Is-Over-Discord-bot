@@ -40,6 +40,7 @@ import SlashSettings from './functions/slash/slash-settings.js'
 import SlashSettingsReview from './functions/slash/slash-settings-review.js'
 import RoomDeleteCheck from './functions/room-delete-check.js'
 import Log from './functions/log.js'
+import SlashCreateVoiceMan from './functions/slash/slash-cratevoiceman.js'
 
 
 
@@ -69,9 +70,10 @@ client.on('ready', (client) => {
 
     let d = new Date()
     let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
+    let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
     update(ref(db, `TurnOnLogs`), {
-        [date]: 'Turned on'
+        [datecode]: `${date}`
     })
 
 
@@ -86,7 +88,7 @@ client.on('ready', (client) => {
 
     setInterval(() => {
         roleIsOwer(client)      
-    }, 3600000) 
+    }, 1800000) 
 
     // let commands = client.application?.commands
     
@@ -105,11 +107,6 @@ client.on('ready', (client) => {
         name: "settings",
         description: "ADMIN Bot settings",
         options: [
-            {
-                name: 'voice-manage-channel',
-                description: 'set voice manage channel',
-                type: DiscordJS.ApplicationCommandOptionType.Channel
-            },
             {
                 name: 'point-per-minute',
                 description: 'set active point per one minute in voice channel',
@@ -156,6 +153,11 @@ client.on('ready', (client) => {
                 type: DiscordJS.ApplicationCommandOptionType.Number
             },
         ]
+    })
+
+    commands?.create({
+        name: "createvoisemanagement",
+        description: "ADMIN create voice & text channel for room management",
     })
 
     commands?.create({
@@ -244,19 +246,6 @@ client.on('ready', (client) => {
     })
 
     commands?.create({
-        name: "roomlimit",
-        description: "Change room members limit",
-        options: [
-            {
-                name: 'limit',
-                description: 'num of limit',
-                required: true,
-                type: DiscordJS.ApplicationCommandOptionType.Integer
-            },
-        ],
-    })
-
-    commands?.create({
         name: "sendmsg",
         description: "ADMIN. Send message in embed!",
         options: [
@@ -281,29 +270,6 @@ client.on('ready', (client) => {
     commands?.create({
         name: "active",
         description: "Show your active",
-    })
-
-    commands?.create({
-        name: "roomname",
-        description: "Change name of youre room",
-        // options: [
-        //     {
-        //         name: 'room-name',
-        //         description: 'New name',
-        //         required: true,
-        //         type: DiscordJS.ApplicationCommandOptionType.String
-        //     }
-        // ]
-    })
-
-    commands?.create({
-        name: "roomlock",
-        description: "Lock your room",
-    })
-
-    commands?.create({
-        name: "roomunlock",
-        description: "Unlock your room",
     })
 
     commands?.create({
@@ -389,7 +355,7 @@ client.on('ready', (client) => {
         description: "You can buy role on time here",
     })
 
-    // client.application.commands.fetch('1010935351356968982')
+    // client.application.commands.fetch('1012725832436957184')
     // .then( (command) => {
     //     console.log(`Fetched command ${command.name}`)
     //     // further delete it like so:
@@ -427,7 +393,8 @@ client.on('ready', (client) => {
 })
 
 client.on('interactionCreate', async (interaction) => {
-    userCheck(interaction.guild.id, interaction.user.id, interaction.user.username, interaction.guild.name, client)
+    if(interaction.guild !== null) {
+        userCheck(interaction.guild.id, interaction.user.id, interaction.user.username, interaction.guild.name, client)
 
         let { commandName, options } = interaction
 
@@ -441,6 +408,19 @@ client.on('interactionCreate', async (interaction) => {
             else if (interaction.customId === 'btnBack') {
                 SwitchPage(interaction, options, client, 'back')
             }
+
+
+
+            else if (interaction.customId === 'roomname') {
+                roomName(interaction, options, client)
+            } 
+            else if (interaction.customId === 'roomlock') {
+                SlashRoomLock(interaction, options, client)
+            } 
+            else if (interaction.customId === 'roomunlock') {
+                SlashRoomUnlock(interaction, options, client)
+            } 
+
         }
 
         if (interaction.type === InteractionType.ModalSubmit) { roomNameAnswer(interaction, options, client)}
@@ -448,6 +428,8 @@ client.on('interactionCreate', async (interaction) => {
         if(commandName === "help") { SlashHelp(interaction, options, client)}
 
         else if(commandName === "settings") { SlashSettings(interaction, options, client)}
+
+        else if(commandName === "createvoisemanagement") { SlashCreateVoiceMan(interaction, options, client)}
 
         else if(commandName === "settingsreview") { SlashSettingsReview(interaction, options, client)}
 
@@ -493,15 +475,26 @@ client.on('interactionCreate', async (interaction) => {
 
         else if(commandName === "wallet") { SlashWallet(interaction, options, client)}
 
-        else if(commandName === "myreferral") { SlashMyReferral(interaction, options, client)}    
+        else if(commandName === "myreferral") { SlashMyReferral(interaction, options, client)}   
+    } else {
+        const Embed = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Slash commands only on servers!')
+        .setTimestamp()
+        .setFooter({ text: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg' });
+    
+        interaction.user.send({embeds: [Embed]})
+    }
 })
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-    userCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name, client)
+    if(!oldState.member.user.bot && !newState.member.user.bot) {
+        userCheck(newState.guild.id, newState.id, newState.member.user.username, newState.guild.name, client)
  
-    setTimeout(roomsCreaterChack, 100, oldState, newState)
-    setTimeout(emptyRoomChack, 100, oldState, newState)
-    setTimeout(calcVoiceTime, 1500, oldState, newState, new Date(), client)
+        setTimeout(roomsCreaterChack, 100, oldState, newState)
+        setTimeout(emptyRoomChack, 100, oldState, newState)
+        setTimeout(calcVoiceTime, 1500, oldState, newState, new Date(), client)
+    }
 })
 
 client.on('channelDelete', async (channel) => {
@@ -559,6 +552,8 @@ client.on('messageCreate', async (message) => {
         userCheck(message.guildId, message.author.id, message.author.username, message.guild.name, client)}
     setTimeout(userMessagePlus, 8000, message) //update user count fo text messages (DB)
 
+        
+
         // let arr = [
 
         // ]
@@ -580,17 +575,9 @@ client.on('messageCreate', async (message) => {
     // } 
 
 
-    // if(message.content == 'bbb') {
-    //     let str = 'https://i.waifu.pics/E7cfJjs.gif https://i.waifu.pics/s~CLnmA.gif https://i.waifu.pics/puI2pTf.gif https://i.waifu.pics/QFGN4vE.gif https://c.tenor.com/XiYuU9h44-AAAAAM/anime-slap-mad.gif https://c.tenor.com/eU5H6GbVjrcAAAAC/slap-jjk.gif https://c.tenor.com/XqR-JFM-RgwAAAAC/anime-slap-dog.gif'
-    //     let arr = str.split(' ')
-
-    //     let path = `gifs/slap`
-
-    //     for (let i = 0; i < arr.length; i++) {
-    //         update(ref(db, path), {
-    //             [i]: arr[i],
-    //           })
-    //     }
+    if(message.content == 'bbb') {
+        message.reply(client.user.displayAvatarURL())
+    }
 
 
     // //     const exampleEmbed = new EmbedBuilder()
@@ -692,8 +679,8 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-// client.login(process.env.token)
+client.login(process.env.token)
 // tio
-client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
+// client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
 // client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 

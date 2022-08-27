@@ -13,7 +13,7 @@ export default function SlashWallet(interaction, options, client) {
             .setAuthor({ name: `${interaction.user.username} ▪ wallet`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
             .setTitle(`**Coins**: ${data.coins}`)
             // .setTimestamp()
-            // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+            // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             interaction.reply({  embeds: [Embed] }) 
         }
       }, {

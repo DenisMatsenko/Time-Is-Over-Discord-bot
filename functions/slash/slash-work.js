@@ -34,7 +34,7 @@ export default function SlashWork(interaction, options, client) {
                     // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
                     .setTitle('You already worked today.')
                     // .setTimestamp() 
-                    // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({  embeds: [Embed] })
             } else {
                 let randomNum = Math.floor(Math.random() * ((max+1)-min)) + min;
@@ -51,7 +51,7 @@ export default function SlashWork(interaction, options, client) {
                 .setTitle(`You made ${randomNum} today.`)
                 .setDescription(`Youre bag is ${data.coins + randomNum}💰 now.`)
                 // .setTimestamp()
-                // .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                 interaction.reply({  embeds: [Embed] })
             }
             

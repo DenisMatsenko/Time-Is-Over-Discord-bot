@@ -35,7 +35,7 @@ export default async function SlashCrime(interaction, options, client) {
                     // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
                     .setTitle('You already crimed today.')
                     .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({  embeds: [Embed] })
             } else {
                 let chanceNum = Math.floor(Math.random() * 101);
@@ -52,7 +52,7 @@ export default async function SlashCrime(interaction, options, client) {
                     .setTitle(`You made ${randomNum}💰 crime coins today.`)
                     .setDescription(`Youre bag is ${data.coins + randomNum}💰 now.`)
                     .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({  embeds: [Embed] })
                 }
 
@@ -69,7 +69,7 @@ export default async function SlashCrime(interaction, options, client) {
                     .setTitle(`You lost ${randomNum}💰 coins :[`)
                     .setDescription(`Youre bag is ${data.coins - randomNum}💰 now.`)
                     .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
                     interaction.reply({  embeds: [Embed] })
                 }
             }
