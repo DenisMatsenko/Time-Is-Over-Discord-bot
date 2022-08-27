@@ -22,7 +22,7 @@ export default async function SlashHelp(interaction, options, client)  {
     **Activity**
     ● ***/top*** [_number_] - Shows the top active members of the server.
     ● ***/myreferral*** [_@user_] - Make the _@user_ your referral, he will receive 20% of your activity points. Make your referral only the person who invited you to the server. You can use this command _only once!_
-    ● ***/myactive*** - Shows the number of activity points, sent messages and minutes in voice chat.
+    ● ***/active*** - Shows the number of activity points, sent messages and minutes in voice chat.
 
     ! For one message you get **${data.pointPerMsg}** activity point, for one minute in voice chat you get **${data.pointPerMinute}** activity points.
     `)

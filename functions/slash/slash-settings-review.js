@@ -14,7 +14,6 @@ export default function SlashSettingsReview(interaction, options, client) {
 
             for (let i = 0; i < arr.length; i++) {
                 if(arr[i] == 'voiceManageChannel') {
-                    strresult += `${arr[i]} - <#${data[arr[i]]}>.\n`
                 } else {
                     strresult += `${arr[i]} - ${data[arr[i]]}.\n`
                 }
