@@ -68,13 +68,13 @@ const client = new DiscordJS.Client({
 client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
-    // let d = new Date()
-    // let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
-    // let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
+    let d = new Date()
+    let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
+    let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
-    // update(ref(db, `TurnOnLogs`), {
-    //     [datecode]: `${date}`
-    // })
+    update(ref(db, `TurnOnLogs`), {
+        [datecode]: `${date}`
+    })
 
 
     // onValue(ref(db, `Command`), async (snapshot) => {
