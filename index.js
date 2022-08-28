@@ -1,4 +1,4 @@
-import DiscordJS, { ActivityFlags, SlashCommandBuilder, InteractionType ,  GatewayIntentBits, EmbedBuilder, PermissionsBitField  } from 'discord.js'
+import DiscordJS, { ActivityFlags, SlashCommandBuilder, InteractionType ,  GatewayIntentBits, EmbedBuilder, PermissionsBitField, MessageActivityType  } from 'discord.js'
 
 import userMessagePlus from './functions/user-message-plus.js'
 import userCheck from './functions/user-check.js'
@@ -68,13 +68,13 @@ const client = new DiscordJS.Client({
 client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
-    let d = new Date()
-    let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
-    let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
+    // let d = new Date()
+    // let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
+    // let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
-    update(ref(db, `TurnOnLogs`), {
-        [datecode]: `${date}`
-    })
+    // update(ref(db, `TurnOnLogs`), {
+    //     [datecode]: `${date}`
+    // })
 
 
     // onValue(ref(db, `Command`), async (snapshot) => {
@@ -86,9 +86,13 @@ client.on('ready', (client) => {
     //   }
     // })
 
+    // setInterval(() => {
+    //     roleIsOwer(client)      
+    // }, 1800000) 
+
     setInterval(() => {
         roleIsOwer(client)      
-    }, 1800000) 
+    }, 10000) 
 
     // let commands = client.application?.commands
     
@@ -575,9 +579,9 @@ client.on('messageCreate', async (message) => {
     // } 
 
 
-    if(message.content == 'bbb') {
-        message.reply(client.user.displayAvatarURL())
-    }
+    // if(message.content == 'bbb') {
+    //    console.log(client.guilds.cache.get(message.guild.id).members.cache.get(message.author.id).user)
+    // }
 
 
     // //     const exampleEmbed = new EmbedBuilder()
@@ -679,8 +683,8 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-client.login(process.env.token)
+// client.login(process.env.token)
 // tio
 // client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
-// client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 
+client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 

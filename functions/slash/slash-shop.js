@@ -5,7 +5,7 @@ import Log from '../log.js'
 
 export default async function SlashShop(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash shop')
-    let msg = 0
+    // interaction.deferReply()
 
     let path = `guilds/${interaction.guildId}/shop`
     onValue(ref(db, path), async (snapshot) => {
@@ -55,12 +55,31 @@ export default async function SlashShop(interaction, options, client)  {
                     .setLabel('x')
                     .setStyle(ButtonStyle.Secondary),
             )
-            interaction.channel.send({ embeds: [Embed], components: [row] }).then(msg => {
-                setTimeout(async () => {
-                    let messageedit = await interaction.channel.messages.fetch(msg.id).catch((error) => {console.log("error: ",  error)})
-                    if(messageedit) {msg.delete()}
-                }, 90000)
+            interaction.reply({ embeds: [Embed], components: [row] }).then(() => {
+                let lmsg = interaction.channel.lastMessage
+                if(lmsg.author.bot) {
+                    setTimeout(async () => {
+                    lmsg.delete().catch(error => {})
+                }, 45000)
+                }
             })
+           
+            
+            
+            // console.log("msg: ",  msg)
+
+
+
+
+
+
+
+            // interaction.channel.send({ embeds: [Embed], components: [row] }).then(msg => {
+            //     setTimeout(async () => {
+            //         let messageedit = await interaction.channel.messages.fetch(msg.id).catch((error) => {console.log("error: ",  error)})
+            //         if(messageedit) {msg.delete()}
+            //     }, 90000)
+            // })
 
 
 
@@ -71,8 +90,7 @@ export default async function SlashShop(interaction, options, client)  {
             .setTitle(`Shop is empty now :[`)
             .setTimestamp()
             .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-            interaction.channel.send({ embeds: [Embed]}).then(msg => {
-               setTimeout(() => {msg.delete()}, 60000)})
+            interaction.reply({ embeds: [Embed]})
         }
     }, {onlyOnce: true})
 
