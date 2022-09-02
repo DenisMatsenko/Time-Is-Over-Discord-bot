@@ -2,6 +2,7 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityFlags,
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default async function SlashBuy(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash buy')
@@ -18,19 +19,109 @@ export default async function SlashBuy(interaction, options, client)  {
                     if (!interaction.member.roles.cache.some(role => role.id === item.split('.')[0])) {
                         let isError = false
                         client.guilds.cache.get(interaction.guildId).members.cache.get(interaction.user.id).roles.add(item.split('.')[0]).catch(error => {isError = true})
-                        isError ? embedReply(interaction, 'Something wrong, check bot permissions!', 'red', client) : writeToDb(interaction, item, client)
+                        isError ? sendEmnbed({
+                            color: 'red',
+                            thumbnail: null,
+                    
+                            russianTitle: 'Что-то пошло не так, проверте разрешения бота!',
+                            russianDescription: null,
+                            russianFields: [],
+                    
+                            englishTitle: 'Something wrong, check bot permissions!',
+                            englishDescription: null,
+                            englishFields: [],
+                    
+                            author: null,
+                            // timestamp: 'true',
+                            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                    
+                            guildId: interaction.guildId,
+                            feedback: {
+                              type: 'reply',
+                              path: interaction,
+                              ephemeral: true,
+                        },}) : writeToDb(interaction, item, client)
                     }
                     else {
-                        embedReply(interaction, 'You already have this role!', 'red', client)
+                        sendEmnbed({
+                            color: 'red',
+                            thumbnail: null,
+                    
+                            russianTitle: 'У вас уже есть эта роль!',
+                            russianDescription: null,
+                            russianFields: [],
+                    
+                            englishTitle: 'You already have this role!',
+                            englishDescription: null,
+                            englishFields: [],
+                    
+                            author: null,                            
+                            //// timestamp: 'true',
+                            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                    
+                            guildId: interaction.guildId,
+                            feedback: {
+                              type: 'reply',
+                              path: interaction,
+                              ephemeral: true
+                            },
+                        })
+
                     }
                 }
                 else {
-                    embedReply(interaction, 'You dont have enought coins!', 'red', client)
+                    sendEmnbed({
+                        color: 'red',
+                        thumbnail: null,
+                
+                        russianTitle: 'Недостаточно коинов!',
+                        russianDescription: null,
+                        russianFields: [],
+                
+                        englishTitle: 'You dont have enought coins!',
+                        englishDescription: null,
+                        englishFields: [],
+                
+                        author: null,                        
+                        // timestamp: 'true',
+                        footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                
+                        guildId: interaction.guildId,
+                        feedback: {
+                          type: 'reply',
+                          path: interaction,
+                          ephemeral: true,
+                        },
+                    })
+
                 }
             }, {onlyOnce: true})
         }
         else {
-            embedReply(interaction, 'Wrong number!', 'red', client)
+            sendEmnbed({
+                color: 'red',
+                thumbnail: null,
+        
+                russianTitle: 'Неправильный номер!',
+                russianDescription: null,
+                russianFields: [],
+        
+                englishTitle: 'Wrong number!',
+                englishDescription: null,
+                englishFields: [],
+        
+                author: null,                
+                // timestamp: 'true',
+                footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+        
+                guildId: interaction.guildId,
+                feedback: {
+                  type: 'reply',
+                  path: interaction,
+                  ephemeral: true,
+                },
+            })
+
         }
     }, {onlyOnce: true})
 }
@@ -52,15 +143,24 @@ const writeToDb = (interaction, item, client) => {
             [index]: `${time()}.${role}.${member}`
         })
 
-        embedReply(interaction, 'Role successfully purchased!', '', client)
+        sendEmnbed({
+            color: 'blue',
+            thumbnail: null,
+    
+            russianTitle: 'Роль успешно добавлена!',
+            russianDescription: null,
+            russianFields: [],
+    
+            englishTitle: 'Role successfully purchased!',
+            englishDescription: null,
+            englishFields: [],
+    
+            author: null,            
+            // timestamp: 'true',
+            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+    
+            guildId: interaction.guildId,
+            feedback: {type: 'reply', path: interaction, ephemeral: true,},
+        })
     }, {onlyOnce: true})
-}
-
-const embedReply = (interaction, text, color, client) => {
-    let Embed = new EmbedBuilder()
-    .setColor(color === 'red' ? 0xbd3c3c : 0x3a60b5)
-    .setTitle(text)
-    .setTimestamp()
-    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-    interaction.reply({ embeds: [Embed], ephemeral: true})
 }

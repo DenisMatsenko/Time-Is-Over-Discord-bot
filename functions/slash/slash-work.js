@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default function SlashWork(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash work')
@@ -44,15 +45,29 @@ export default function SlashWork(interaction, options, client) {
                 })
 
                 
-
-                let Embed = new EmbedBuilder()
-                .setColor(0x3a60b5)
-                .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                .setTitle(`You made ${randomNum} today.`)
-                .setDescription(`Youre bag is ${data.coins + randomNum}💰 now.`)
-                // .setTimestamp()
-                // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                interaction.reply({  embeds: [Embed] })
+                sendEmnbed({
+                    color: 'blue',
+                    thumbnail: null,
+        
+                    russianTitle:`Ты заработал ${randomNum}.`,
+                    russianDescription: `Твой баланс сейчас: ${data.coins + randomNum}💰.`,
+                    russianFields: [],
+        
+                    englishTitle: `You made ${randomNum} today.`,
+                    englishDescription: `Youre bag is ${data.coins + randomNum}💰 now.`,
+                    englishFields: [],
+        
+                    author: {name: `${interaction.user.username} ▪ Work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'},
+                    //timestamp: true,
+                    footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+        
+                    guildId: interaction.guildId,
+                    feedback: {
+                      type: 'reply',
+                      path: interaction,
+                      ephemeral: false
+                    },
+                  })
             }
             
         }

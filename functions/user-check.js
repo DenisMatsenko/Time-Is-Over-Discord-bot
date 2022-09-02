@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from './log.js'
+import sendEmnbed from './sendEmbed.js'
 
 export default async function userCheck(guildId, userId, userName, guildName, client) {
     Log(client.guilds.cache.get(guildId), client.users.cache.get(userId), 'User Check')
@@ -47,14 +48,28 @@ const CreateNewUser = (path, userId, userName, guildIconUrl, guildName, client, 
         voiseChatDisConnectionTime: "none",
     })
 
-    let Embed = new EmbedBuilder()
-    .setColor(0x3a60b5)
-    // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-    .setTitle('Account has been created')
-    .setDescription(`Hello. Your interactive account for server **${guildName}** has been created.`)
-    .setThumbnail(guildIconUrl)
-    .setTimestamp()
-    .setFooter({ text: `Time is over from ${guildName}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+    sendEmnbed({
+        color: 'blue',
+        thumbnail: guildIconUrl,
 
-    client.users.cache.get(userId).send({ embeds: [Embed] }).catch((error) => {console.error(error)})
+        russianTitle:'Аккаунт был создан.',
+        russianDescription: `Создан интерактивный аккаутн для сервера **${guildName}**`,
+        russianFields: [],
+        
+        englishTitle: 'Account has been created',
+        englishDescription: `Hello. Your interactive account for server **${guildName}** has been created.`,
+        englishFields: [],
+
+        author: null,
+        //timestamp: true,
+        footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+
+        guildId: guildId, 
+        feedback: {
+          type: 'send',
+          add: {client: client, guildId: guildId, memId: userId},
+          path: 'path',
+          ephemeral: false
+        },
+      }) 
 }

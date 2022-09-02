@@ -9,8 +9,6 @@ export default async function SlashRoomLock(interaction, options, client) {
 
   interaction.update('** **')
 
-
-
   let path =  `guilds/${interaction.guildId}/privateRooms/rooms`
   onValue(ref(db, path), (snapshot) => {
     let data = snapshot.val()
@@ -25,11 +23,4 @@ export default async function SlashRoomLock(interaction, options, client) {
       }
     }
   }, {onlyOnce: true})
-
-  // let Embed = new EmbedBuilder()
-  // .setColor(0x3a60b5)
-  // .setTitle(`Room has been locked.`)
-  // .setTimestamp()
-  // // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-  // interaction.reply({ embeds: [Embed], ephemeral: true, })
 }

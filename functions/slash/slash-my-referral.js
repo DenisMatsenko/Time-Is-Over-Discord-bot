@@ -3,6 +3,7 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import { async } from '@firebase/util'
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default async function SlashMyReferral(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash my referral')
@@ -15,7 +16,7 @@ export default async function SlashMyReferral(interaction, options, client) {
               let data = snapshot.val();
               onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), (snapshot) => {
                 let mydata = snapshot.val();
-    
+     
               //exists checking
               if(data !== null && interaction.user.id != User.id && !mydata.hasRefferal) {
                 set(ref(db, `${path}/referrals/${interaction.user.id}`), {
@@ -27,44 +28,106 @@ export default async function SlashMyReferral(interaction, options, client) {
                     hasRefferal: true,
                   })
 
-                let Embed = new EmbedBuilder()
-                .setColor(0x3a60b5)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('You became a refer')
-                .setDescription(`<@${User.id}> is now your referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                interaction.reply({ embeds: [Embed] })
+                  
+                  sendEmnbed({
+                    color: 'blue',
+                    thumbnail: null,
+            
+                    russianTitle: `Вы стали реферером`,
+                    russianDescription: `<@${User.id}> твой реферал.`,
+                    russianFields: [],
+            
+                    englishTitle: `You became a refer`,
+                    englishDescription: `<@${User.id}> is now your referral.`,
+                    englishFields: [],
+            
+                    author: null,                            
+                    //// timestamp: 'true',
+                    footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+            
+                    guildId: interaction.guildId,
+                    feedback: {
+                      type: 'reply',
+                      path: interaction,
+                      ephemeral: false,
+                    },
+                })
+
               }
               else if (data !== null && interaction.user.id != User.id && mydata.hasRefferal) {
-                let Embed = new EmbedBuilder()
-                .setColor(0xbd3c3c)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`You already have a referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                interaction.reply({ embeds: [Embed] })
+                sendEmnbed({
+                  color: 'red',
+                  thumbnail: null,
+          
+                  russianTitle: `Что-то пошло не так :[`,
+                  russianDescription: `У вас уже есть реферал`,
+                  russianFields: [],
+          
+                  englishTitle: `Something is wrong :[`,
+                  englishDescription: `You already have a referral.`,
+                  englishFields: [],
+          
+                  author: null,                            
+                  //// timestamp: 'true',
+                  footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+          
+                  guildId: interaction.guildId,
+                  feedback: {
+                    type: 'reply',
+                    path: interaction,
+                    ephemeral: false,
+                  },
+              })
               }
               else if (data !== null && interaction.user.id == User.id) {
-                let Embed = new EmbedBuilder()
-                .setColor(0xbd3c3c)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`You can't be your own referral.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                interaction.reply({ embeds: [Embed] })
+                sendEmnbed({
+                  color: 'red',
+                  thumbnail: null,
+          
+                  russianTitle: `Что-то пошло не так :[`,
+                  russianDescription: `У вас уже есть реферал`,
+                  russianFields: [],
+          
+                  englishTitle: `Something is wrong :[`,
+                  englishDescription: `You already have a referral.`,
+                  englishFields: [],
+          
+                  author: null,                            
+                  //// timestamp: 'true',
+                  footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+          
+                  guildId: interaction.guildId,
+                  feedback: {
+                    type: 'reply',
+                    path: interaction,
+                    ephemeral: false,
+                  },
+              })
               }
               else {
-                let Embed = new EmbedBuilder()
-                .setColor(0xbd3c3c)
-                // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                .setTitle('Something is wrong :[')
-                .setDescription(`<@${User.id}> doesn't have an interactive account.`)
-                .setTimestamp()
-                .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                interaction.reply({ embeds: [Embed] })
+                sendEmnbed({
+                  color: 'red',
+                  thumbnail: null,
+          
+                  russianTitle: `Что-то пошло не так :[`,
+                  russianDescription: `У <@${User.id}> нет аккаунта.`,
+                  russianFields: [],
+          
+                  englishTitle: `Something is wrong :[`,
+                  englishDescription: `<@${User.id}> doesn't have an interactive account.`,
+                  englishFields: [],
+          
+                  author: null,                            
+                  //// timestamp: 'true',
+                  footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+          
+                  guildId: interaction.guildId,
+                  feedback: {
+                    type: 'reply',
+                    path: interaction,
+                    ephemeral: false,
+                  },
+              })
               }
             }, {
                 onlyOnce: true 
@@ -73,13 +136,28 @@ export default async function SlashMyReferral(interaction, options, client) {
                 onlyOnce: true 
             })
         } else {
-            let Embed = new EmbedBuilder()
-            .setColor(0xbd3c3c)
-            // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-            .setTitle('Something is wrong :[')
-            .setDescription(`Wrong account entered.`)
-            .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-            interaction.reply({ embeds: [Embed] })
+          sendEmnbed({
+            color: 'red',
+            thumbnail: null,
+    
+            russianTitle: `Что-то пошло не так :[`,
+            russianDescription: `Введен неправильный аккаунт.`,
+            russianFields: [],
+    
+            englishTitle: `Something is wrong :[`,
+            englishDescription: `Wrong account entered.`,
+            englishFields: [],
+    
+            author: null,                            
+            //// timestamp: 'true',
+            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+    
+            guildId: interaction.guildId,
+            feedback: {
+              type: 'reply',
+              path: interaction,
+              ephemeral: false,
+            },
+        })
         }
 }

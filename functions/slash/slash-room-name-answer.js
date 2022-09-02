@@ -3,6 +3,7 @@ import {db} from "../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js';
 
+
 export default async function roomNameAnswer(interaction, options, client) {
   Log(interaction.guild, interaction.user, 'Room name answer')
 
@@ -31,11 +32,4 @@ export default async function roomNameAnswer(interaction, options, client) {
       }
     }
   }, {onlyOnce: true})
-
-  // let Embed = new EmbedBuilder()
-  // .setColor(0x3a60b5)
-  // .setTitle(`Room name has been changed to ${answer}`)
-  // .setTimestamp()
-  // // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-  // interaction.reply({ embeds: [Embed], ephemeral: true, })
 }

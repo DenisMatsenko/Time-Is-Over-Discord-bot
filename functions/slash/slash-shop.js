@@ -2,6 +2,7 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityFlags,
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default async function SlashShop(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash shop')
@@ -85,12 +86,29 @@ export default async function SlashShop(interaction, options, client)  {
 
         }
         else {
-            let Embed = new EmbedBuilder()
-            .setColor(0xbd3c3c)
-            .setTitle(`Shop is empty now :[`)
-            .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-            interaction.reply({ embeds: [Embed]})
+            sendEmnbed({
+                color: 'red',
+                thumbnail: null,
+        
+                russianTitle: `Магазин пустой сейчас :[`,
+                russianDescription: null,
+                russianFields: [],
+        
+                englishTitle: `Shop is empty now :[`,
+                englishDescription: null,
+                englishFields: [],
+        
+                author: null,                            
+                // timestamp: 'true',
+                footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+        
+                guildId: interaction.guildId,
+                feedback: {
+                  type: 'reply',
+                  path: interaction,
+                  ephemeral: false,
+                },
+            }) 
         }
     }, {onlyOnce: true})
 

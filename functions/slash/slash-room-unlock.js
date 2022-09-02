@@ -24,12 +24,4 @@ export default async function SlashRoomUnlock(interaction, options, client) {
       }
     }
   }, {onlyOnce: true})
-
-  // let Embed = new EmbedBuilder()
-  // .setColor(0x3a60b5)
-  // .setTitle(`Room has been unlocked.`)
-  // .setTimestamp()
-  // // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-  // let msg = await interaction.reply({ embeds: [Embed], ephemeral: true, })
-  
 } 

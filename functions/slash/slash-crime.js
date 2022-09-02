@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default async function SlashCrime(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash crime')
@@ -29,14 +30,30 @@ export default async function SlashCrime(interaction, options, client) {
             let oldYears = lastTime.split('.')[2]
 
             if(d.getFullYear() === parseInt(oldYears) && d.getMonth()+1 === parseInt(oldMonth) && d.getDate() === parseInt(oldDays)) {
-                    let Embed = new EmbedBuilder()
-                    .setColor(0xbd3c3c)
-                    .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                    // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                    .setTitle('You already crimed today.')
-                    .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                    interaction.reply({  embeds: [Embed] })
+                sendEmnbed({
+                    color: 'red',
+                    thumbnail: null,
+            
+                    russianTitle: `Вы уже украли что-то сегодня!`,
+                    russianDescription: null,
+                    russianFields: [],
+            
+                    englishTitle: `You already crimed today!`,
+                    englishDescription: null,
+                    englishFields: [],
+            
+                    author: { name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q' },                            
+                    //// timestamp: 'true',
+                    footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+            
+                    guildId: interaction.guildId,
+                    feedback: {
+                      type: 'reply',
+                      path: interaction,
+                      ephemeral: false,
+                    },
+                })
+
             } else {
                 let chanceNum = Math.floor(Math.random() * 101);
                 if(chanceNum <= chanceL) {
@@ -45,15 +62,31 @@ export default async function SlashCrime(interaction, options, client) {
                         coins: (data.coins + randomNum),
                         lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
                     })    
-     
-                    let Embed = new EmbedBuilder()
-                    .setColor(0x3a60b5)
-                    .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                    .setTitle(`You made ${randomNum}💰 crime coins today.`)
-                    .setDescription(`Youre bag is ${data.coins + randomNum}💰 now.`)
-                    .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                    interaction.reply({  embeds: [Embed] })
+
+                    sendEmnbed({
+                        color: 'blue',
+                        thumbnail: null,
+                
+                        russianTitle: `Вы получили ${randomNum}💰 украденных коинов`,
+                        russianDescription: `Ваш баланс сейчас: ${data.coins + randomNum}💰 `,
+                        russianFields: [],
+                
+                        englishTitle: `You made ${randomNum}💰 crime coins today.`,
+                        englishDescription: `Youre bag is ${data.coins + randomNum}💰 now.`,
+                        englishFields: [],
+                
+                        author: { name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q' },                            
+                        //// timestamp: 'true',
+                        footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                
+                        guildId: interaction.guildId,
+                        feedback: {
+                          type: 'reply',
+                          path: interaction,
+                          ephemeral: false,
+                        },
+                    })
+
                 }
 
                 else {
@@ -61,16 +94,31 @@ export default async function SlashCrime(interaction, options, client) {
                     update(ref(db, path), {
                         coins: (data.coins - randomNum),
                         lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
-                    })    
-    
-                    let Embed = new EmbedBuilder()
-                    .setColor(0x3a60b5)
-                    .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                    .setTitle(`You lost ${randomNum}💰 coins :[`)
-                    .setDescription(`Youre bag is ${data.coins - randomNum}💰 now.`)
-                    .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                    interaction.reply({  embeds: [Embed] })
+                    })
+
+                    sendEmnbed({
+                        color: 'blue',
+                        thumbnail: null,
+                
+                        russianTitle: `Вы потеряли ${randomNum}💰 коинов :[`,
+                        russianDescription: `Ваш баланс сейчас: ${data.coins - randomNum}💰 `,
+                        russianFields: [],
+                
+                        englishTitle: `You lost ${randomNum}💰 coins :[`,
+                        englishDescription: `Youre bag is ${data.coins - randomNum}💰 now.`,
+                        englishFields: [],
+                
+                        author: { name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q' },                            
+                        //// timestamp: 'true',
+                        footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                
+                        guildId: interaction.guildId,
+                        feedback: {
+                          type: 'reply',
+                          path: interaction,
+                          ephemeral: false,
+                        },
+                    })
                 }
             }
             

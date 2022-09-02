@@ -18,7 +18,6 @@ import SlashAddShopRole from './functions/slash/slash-add-shoprole.js'
 import SlashDelShopRole from './functions/slash/slash-del-shoprole.js'
 import SlashBuy from './functions/slash/slash-buy.js'
 import SlashActive from './functions/slash/slash-active.js'
-import SlashRoomLimit from './functions/slash/slash-room-limit.js'
 import SlashRoomLock from './functions/slash/slash-room-lock.js'
 import SlashRoomUnlock from './functions/slash/slash-room-unlock.js'
 import SlashHug from './functions/interaction/slash-hug.js'
@@ -42,8 +41,7 @@ import RoomDeleteCheck from './functions/room-delete-check.js'
 import Log from './functions/log.js'
 import SlashCreateVoiceMan from './functions/slash/slash-cratevoiceman.js'
 
-
-
+import sendEmnbed from './functions/sendEmbed.js'
 //////////////
 
 
@@ -68,10 +66,21 @@ const client = new DiscordJS.Client({
 client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
+    onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
+        let Embed = new EmbedBuilder()
+        .setTitle('Time is over turned on!')
+        .setThumbnail(client.user.avatarURL())
+        .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
+        .setTimestamp()
+        client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
+    })
+
+
     let d = new Date()
     let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
     let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
+    if(client.user.id === '1002151461892927510')
     update(ref(db, `TurnOnLogs`), {
         [datecode]: `${date}`
     })
@@ -89,11 +98,38 @@ client.on('ready', (client) => {
     // setInterval(() => {
     //     roleIsOwer(client)      
     // }, 1800000) 
-
+ 
     setInterval(() => {
         roleIsOwer(client)      
-    }, 10000) 
+    }, 10000)
 
+    //     sendEmnbed({
+    //     color: 'blue',
+    //     thumbnail: null,
+
+    //     russianTitle:`Временная роль закончилась.`,
+    //     russianDescription: null,
+    //     russianFields: [],
+
+    //     englishTitle: `Role has been removed.`,
+    //     englishDescription: null,
+    //     englishFields: [],
+
+    //     author: null,
+    //     //timestamp: true,
+    //     footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+
+    //     guildId: '919660235604508772', 
+    //     feedback: {
+    //       type: 'send',
+    //       add: {client: client, guildId: '919660235604508772', memId: '538343406326513704'},
+    //       ephemeral: false
+    //     },
+    //   })
+
+    // client.guilds.cache.get('919660235604508772').members.fetch('538343406326513704').then((user) => console.log(user.send('hi')))
+    // client.guilds.cache.get('919660235604508772').members.cache.get('538343406326513704')
+    // console.log('dqwdq',    client.guilds.cache.get('919660235604508772').members.cache.get('538343406326513704')    )
     // let commands = client.application?.commands
     
     // const guildId = '919660235604508772'
@@ -111,6 +147,13 @@ client.on('ready', (client) => {
         name: "settings",
         description: "ADMIN Bot settings",
         options: [
+            {
+                name: 'bot-language',
+                description: 'set bot language',
+                choices: [{name:'English', value:'English'}, {name:'Russian', value:'Russian'}],
+                type: DiscordJS.ApplicationCommandOptionType.String
+            },
+
             {
                 name: 'point-per-minute',
                 description: 'set active point per one minute in voice channel',
@@ -522,6 +565,7 @@ client.on('guildCreate' , async (guild) => {
         crimeGetMax: 50,
         crimeLostMin: 50,
         crimeLostMax: 100,
+        language: 'English'
     })
 
     const Embed = new EmbedBuilder()
@@ -580,8 +624,34 @@ client.on('messageCreate', async (message) => {
 
 
     // if(message.content == 'bbb') {
-    //    console.log(client.guilds.cache.get(message.guild.id).members.cache.get(message.author.id).user)
-    // }
+    //     let Embed = new EmbedBuilder()
+    //     .setColor(0x3a60b5)
+    //     // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
+    //     .setTitle(`You made  today.`)
+    //     .setDescription(`Youre bag is now.`)
+    //     .setTimestamp()
+    //     .addFields([
+    //         { name: 'Text messages:',    value: `a`, inline: true },
+    //         { name: 'Voice minutes:',    value: `a`, inline: true },
+    //         { name: 'Activity points:',    value: `a`, inline: true },
+    //     ])
+    //     // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
+    //     message.reply({  embeds: [Embed] })
+
+        // onValue(ref(db, `guilds/${message.guild.id}/settings/language`), (snapshot) => {
+        //     if (snapshot.val()) {
+        //         switch (snapshot.val()) {
+        //             case 'English':
+                        
+        //                 break;
+        //             case 'Russian':
+                    
+        //                 break;
+        //         }
+        //     }
+
+        // }, {onlyOnce: true}) 
+    //    sendEmnbed({color: 'red', title: 'eemmm title'})
 
 
     // //     const exampleEmbed = new EmbedBuilder()
@@ -687,4 +757,4 @@ client.login(process.env.token)
 // tio
 // client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
-// client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 
+//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 

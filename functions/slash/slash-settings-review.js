@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default function SlashSettingsReview(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash settings review')
@@ -20,24 +21,54 @@ export default function SlashSettingsReview(interaction, options, client) {
 
             }
 
-            let Embed = new EmbedBuilder()
-            .setColor(0x3a60b5)
-            .setTitle(`Settings review.`)
-            .setDescription(`${strresult}`)
-            .setTimestamp()
-            .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-            interaction.reply({ embeds: [Embed], ephemeral: true })
-
-
+            sendEmnbed({
+                color: 'blue',
+                thumbnail: null,
+        
+                russianTitle: `Обзор настроек`,
+                russianDescription: `${strresult}`,
+                russianFields: [],
+        
+                englishTitle: `Settings review.`,
+                englishDescription: `${strresult}`,
+                englishFields: [],
+        
+                author: null,                            
+                // timestamp: 'true',
+                footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+        
+                guildId: interaction.guildId,
+                feedback: {
+                  type: 'reply',
+                  path: interaction,
+                  ephemeral: true,
+                },
+            })
         }, {onlyOnce: true})     
 
     } else {
-        let Embed = new EmbedBuilder()
-        .setColor(0xbd3c3c)
-        // .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-        .setTitle(`You are not an administrator!`)
-        .setTimestamp()
-        .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-        interaction.reply({  embeds: [Embed], ephemeral: true })
+        sendEmnbed({
+            color: 'red',
+            thumbnail: null,
+    
+            russianTitle: `Вы не администратор!`,
+            russianDescription: null,
+            russianFields: [],
+    
+            englishTitle: `You are not an administrator!`,
+            englishDescription: null,
+            englishFields: [],
+    
+            author: null,                            
+            // timestamp: 'true',
+            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+    
+            guildId: interaction.guildId,
+            feedback: {
+              type: 'reply',
+              path: interaction,
+              ephemeral: false,
+            },
+        }) 
     }
 }

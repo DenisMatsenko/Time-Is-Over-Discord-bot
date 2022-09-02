@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder, InteractionType ,  Gatew
 import {db} from "./../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from './log.js'
+import sendEmnbed from './sendEmbed.js'
 
 export default async function roleIsOwer(client) {
             onValue(ref(db, `guilds`), async (snapshot) => {
@@ -29,18 +30,59 @@ export default async function roleIsOwer(client) {
                                         
         
                                         remove(ref(db, `guilds/${guildsArr[i]}/timeRoles/${y}`))
-                                        Log(client.guilds.cache.get(guildsArr[i]), client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).user, 'Role is over', 'role removed')
-        
-                                        let Embed = new EmbedBuilder()
-                                        .setColor(0x3a60b5)
-                                        // .setAuthor({ name: `Time is over from ${message.guild.name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL(), url: 'https://discord.js.' })
-                                        .setTitle(`Role has been removed`)
-                                        .setDescription(`Hello. Your time role **«${client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).roles.cache.get(trarr[y].split('.')[1]).name}»** has been removed on the **${client.guilds.cache.get(guildsArr[i]).name}**!`)
-                                        .setThumbnail(client.guilds.cache.get(guildsArr[i]).iconURL())
-                                        .setTimestamp()
-                                        .setFooter({ text: `Time is over from ${client.guilds.cache.get(guildsArr[i]).name}`, iconURL: client.users.cache.get('1002151461892927510').avatarURL() });
+                                        Log(client.guilds.cache.get(guildsArr[i]), 'TIO BOT', 'Role is over',  trarr[y].split('.')[2])
+                                        
+                                        console.log(client.guilds.cache.get(guildsArr[i]).roles.cache.get(trarr[y].split('.')[1]).name)
+                                        // sendEmnbed({
+                                        //     color: 'blue',
+                                        //     thumbnail: client.guilds.cache.get(guildsArr[i]).iconURL(),
+                                
+                                        //     russianTitle:`Временная роль закончилась.`,
+                                        //     russianDescription: `Временная роль **«${client.guilds.cache.get(guildsArr[i]).roles.cache.get(trarr[y].split('.')[1]).name}»** закончилась на сервере **${client.guilds.cache.get(guildsArr[i]).name}**!`,
+                                        //     russianFields: [],
+                                
+                                        //     englishTitle: `Role has been removed.`,
+                                        //     englishDescription: `Hello. Your time role **«${client.guilds.cache.get(guildsArr[i]).roles.cache.get(trarr[y].split('.')[1]).name}»** has been removed on the **${client.guilds.cache.get(guildsArr[i]).name}**!`,
+                                        //     englishFields: [],
+                                
+                                        //     author: null,
+                                        //     //timestamp: true,
+                                        //     footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                                
+                                        //     guildId: client.guilds.cache.get(guildsArr[i]),
+                                        //     feedback: {
+                                        //       type: 'send',
+                                        //     //   add: {client: client, guildId: },
+                                        //       path: client.guilds.cache.get(guildsArr[i]).members.fetch('538343406326513704'),
+                                        //       ephemeral: false
+                                              
+                                        //     },
+                                        //   })
+
+                                        sendEmnbed({
+                                            color: 'blue',
+                                            thumbnail: null,
                                     
-                                        client.users.cache.get(client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).id).send({ embeds: [Embed] })    
+                                            russianTitle:`Временная роль закончилась.`,
+                                            russianDescription: null,
+                                            russianFields: [],
+                                    
+                                            englishTitle: `Role has been removed.`,
+                                            englishDescription: null,
+                                            englishFields: [],
+                                    
+                                            author: null,
+                                            //timestamp: true,
+                                            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                                    
+                                            guildId: guildsArr[i], 
+                                            feedback: {
+                                              type: 'send',
+                                              add: {client: client, guildId: guildsArr[i], memId: trarr[y].split('.')[2]},
+                                              path: 'path',
+                                              ephemeral: false
+                                            },
+                                          }) 
                                     } 
                                 }
                 

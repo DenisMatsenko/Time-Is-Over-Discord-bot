@@ -2,12 +2,11 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default function SlashSettings(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash settings')
     if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-
-
     const settings = {
         voiceManageChannel: options.getChannel('voice-manage-channel') !== null ? options.getChannel('voice-manage-channel').id : options.getChannel('voice-manage-channel'),
         pointPerMinute: options.getNumber('point-per-minute'),
@@ -19,6 +18,7 @@ export default function SlashSettings(interaction, options, client) {
         crimeLostMax: options.getNumber('crime-lost-max'),
         workGetMax: options.getNumber('work-max'),
         workGetMin: options.getNumber('work-min'),
+        language: options.getString('bot-language'),
     }
 
 
@@ -32,27 +32,53 @@ export default function SlashSettings(interaction, options, client) {
         }
     }
 
+    sendEmnbed({
+        color: 'blue',
+        thumbnail: null,
 
+        russianTitle: `Настройки сохранены!`,
+        russianDescription: `Используйте **/settingsreview**.`,
+        russianFields: [],
 
+        englishTitle: `Settings has been changed!`,
+        englishDescription: `Use **/settingsreview**.`,
+        englishFields: [],
 
+        author: null,                            
+        // timestamp: 'true',
+        footer: null,
 
+        guildId: interaction.guildId,
+        feedback: {
+          type: 'reply',
+          path: interaction,
+          ephemeral: true,
+        },
+    })
 
-
-
-    let Embed = new EmbedBuilder()
-    .setColor(0x3a60b5)
-    .setTitle(`Settings has been changed!`)
-    .setDescription(`Use settings review.`)
-    .setTimestamp()
-    // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-    interaction.reply({ embeds: [Embed], ephemeral: true })
     } else {
-        let Embed = new EmbedBuilder()
-        .setColor(0xbd3c3c)
-        // .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-        .setTitle(`You are not an administrator!`)
-        .setTimestamp()
-        .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-        interaction.reply({  embeds: [Embed], ephemeral: true })
+        sendEmnbed({
+            color: 'red',
+            thumbnail: null,
+    
+            russianTitle: `Вы не администратор!`,
+            russianDescription: null,
+            russianFields: [],
+    
+            englishTitle: `You are not an administrator!`,
+            englishDescription: null,
+            englishFields: [],
+    
+            author: null,                            
+            // timestamp: 'true',
+            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+    
+            guildId: interaction.guildId,
+            feedback: {
+              type: 'reply',
+              path: interaction,
+              ephemeral: false,
+            },
+        }) 
     }
 }

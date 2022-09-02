@@ -2,6 +2,7 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder,  ButtonStyle, ActivityFlags
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default async function SlasSendMsg(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash seng msg')
@@ -9,6 +10,7 @@ export default async function SlasSendMsg(interaction, options, client)  {
         const title = options.getString('title')
         const description = options.getString('description')
         const image = options.getString('image')
+
 
         let Embed = new EmbedBuilder()
         .setColor(0x3a60b5)
@@ -20,12 +22,28 @@ export default async function SlasSendMsg(interaction, options, client)  {
         .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
         interaction.channel.send({  embeds: [Embed], ephemeral: true})
     } else {
-        let Embed = new EmbedBuilder()
-        .setColor(0xbd3c3c)
-        // .setAuthor({ name: `${interaction.user.username} ▪ crime`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-        .setTitle(`You are not an administrator!`)
-        .setTimestamp()
-        .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-        interaction.reply({  embeds: [Embed], ephemeral: true })
+        sendEmnbed({
+            color: 'red',
+            thumbnail: null,
+    
+            russianTitle: `Вы не администратор!`,
+            russianDescription: null,
+            russianFields: [],
+    
+            englishTitle: `You are not an administrator!`,
+            englishDescription: null,
+            englishFields: [],
+    
+            author: null,                            
+            // timestamp: 'true',
+            footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+    
+            guildId: interaction.guildId,
+            feedback: {
+              type: 'reply',
+              path: interaction,
+              ephemeral: false,
+            },
+        })
     }
 }

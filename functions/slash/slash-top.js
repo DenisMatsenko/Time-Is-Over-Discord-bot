@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,  GatewayIntentBits, Embe
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import sendEmnbed from '../sendEmbed.js'
 
 export default function SlashTop(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slas top')
@@ -98,20 +99,29 @@ export default function SlashTop(interaction, options, client) {
                     }
 
 
-                    let Embed = new EmbedBuilder()
-                    .setColor(0x3a60b5)
-                    // .setAuthor({ name: `${interaction.user.username} ▪ bag`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-                    .setTitle(`Top ${TopCoun}`)
-                    .setDescription(StrResult)
-                    // .addFields(
-                    //     { name: 'Coins 💰',    value: `${data.coins}`, inline: true },
-                    //     // { name: 'Biscuits 🍪', value: `${data.biscuits}`, inline: true },
-                    // )
-                    .setTimestamp()
-                    .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-                    interaction.reply({ embeds: [Embed] })
-
-                    
+                    sendEmnbed({
+                        color: 'blue',
+                        thumbnail: null,
+                
+                        russianTitle: `Top ${TopCoun}`,
+                        russianDescription: StrResult,
+                        russianFields: [],
+                
+                        englishTitle: `Top ${TopCoun}`,
+                        englishDescription: StrResult,
+                        englishFields: [],
+                
+                        author: null,                            
+                        // timestamp: 'true',
+                        footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+                
+                        guildId: interaction.guildId,
+                        feedback: {
+                          type: 'reply',
+                          path: interaction,
+                          ephemeral: false,
+                        },
+                    }) 
                 }, {onlyOnce: true})
         }
         
