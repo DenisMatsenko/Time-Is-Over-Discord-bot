@@ -4,8 +4,6 @@ import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from './log.js'
 
 export default async function sendEmnbed({thumbnail, guildId, color, russianFields, englishFields, russianTitle, englishTitle, russianDescription, englishDescription, author, timestamp, footer, feedback }) {
-    console.log(feedback)
-
         onValue(ref(db, `guilds/${guildId}/settings/language`), (snapshot) => {
             let Embed = new EmbedBuilder()
             if (snapshot.val()) {

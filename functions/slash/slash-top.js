@@ -97,8 +97,6 @@ export default function SlashTop(interaction, options, client) {
                         if(i < TopCoun) 
                             StrResult += `${i+1}. <@${ArrResult[i].id}> - **${ArrResult[i].COAP}** (referral's: **${ArrResult[i].CORAP}**)\n`
                     }
-
-
                     sendEmnbed({
                         color: 'blue',
                         thumbnail: null,
@@ -121,7 +119,8 @@ export default function SlashTop(interaction, options, client) {
                           path: interaction,
                           ephemeral: false,
                         },
-                    }) 
+                    })
+                    
                 }, {onlyOnce: true})
         }
         
