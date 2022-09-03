@@ -6,7 +6,7 @@ import Log from './log.js'
 export default async function userMessagePlus(message) {
     
     // db add!
-    if(!message.author.bot && !message.author.system) {
+    if(!message.author.bot && !message.author.system && message.guild.id !== null) {
         Log(message.guild, message.author, 'User Message Plus')
         let path = `guilds/${message.guild.id}/members/${message.author.id}/memberInfo`
         let count = 0
