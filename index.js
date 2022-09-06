@@ -153,6 +153,11 @@ client.on('ready', (client) => {
                 choices: [{name:'English', value:'English'}, {name:'Russian', value:'Russian'}],
                 type: DiscordJS.ApplicationCommandOptionType.String
             },
+            {
+                name: 'referal-points',
+                description: 'set % from referal points',
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
 
             {
                 name: 'point-per-minute',
@@ -437,7 +442,7 @@ client.on('ready', (client) => {
     });
 
     
-})
+}) 
 
 client.on('interactionCreate', async (interaction) => {
     if(interaction.guild !== null) {
@@ -565,7 +570,9 @@ client.on('guildCreate' , async (guild) => {
         crimeGetMax: 50,
         crimeLostMin: 50,
         crimeLostMax: 100,
-        language: 'English'
+        language: 'English',
+        referalPoints: 20,
+
     })
 
     const Embed = new EmbedBuilder()
@@ -757,4 +764,4 @@ client.login(process.env.token)
 // tio
 // client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
-//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs') 
+//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')

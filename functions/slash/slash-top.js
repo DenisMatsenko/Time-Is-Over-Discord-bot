@@ -13,6 +13,7 @@ export default function SlashTop(interaction, options, client) {
     onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
         const pointPerMsg = snapshot.val().pointPerMsg
         const pointPerMinute = snapshot.val().pointPerMinute
+        const referalPoints = snapshot.val().referalPoints
     
 
     onValue(ref(db, path), (snapshot2) => { 
@@ -45,7 +46,7 @@ export default function SlashTop(interaction, options, client) {
                                 let path = `guilds/${interaction.guild.id}/members/${ArrOfRefNames[y]}/memberInfo`
                                 onValue(ref(db, path), (snapshot) => { 
                                     let date = snapshot.val()
-                                    RefPoints += Math.round((date.countOfActivityPoints/100)*20)
+                                    RefPoints += Math.round((date.countOfActivityPoints/100)* referalPoints)
 
                                     if(y === ArrOfRefNames.length-1) {
 

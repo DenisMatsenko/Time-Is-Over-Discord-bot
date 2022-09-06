@@ -5,7 +5,12 @@ import Log from './log.js'
 import { async } from '@firebase/util'
 
 export default async function roomsCreaterCheck(oldState, newState) {
-    Log(newState.guild, newState.member.user, 'Rooms creater check')
+    try {
+        Log(newState.guild, newState.member.user, 'Rooms creater check')
+    } catch (error) {
+        console.log("error: ",  error)
+    }
+    
     //проверка на рум криейт
     onValue(ref(db, `guilds/${newState.guild.id}/settings/voiceManageChannel`), async (snapshot) => {
         let data = snapshot.val()

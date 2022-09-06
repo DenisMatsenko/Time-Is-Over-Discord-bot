@@ -8,6 +8,7 @@ export default async function SlashHelp(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash help')
     onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
     let data = snapshot.val();
+    console.log("data: ",  data)
 
     sendEmnbed({
         color: 'blue',
@@ -23,7 +24,7 @@ export default async function SlashHelp(interaction, options, client)  {
     
         **Активность**
         ● ***/top*** - Показывает топ активных игроков сервера.
-        ● ***/myreferral*** [_@пользователь_] - Делает _@пользователя_ вашим рефералом, он будет получать бонусные 20% от ваших очков активности. Сделайте рефералом человека который пригласил вас на сервер. Вы можете сделать это _только один раз!_
+        ● ***/myreferral*** [_@пользователь_] - Делает _@пользователя_ вашим рефералом, он будет получать бонусные ${data.referalPoints ? data.referalPoints : '20'}% от ваших очков активности. Сделайте рефералом человека который пригласил вас на сервер. Вы можете сделать это _только один раз!_
         ● ***/active*** - Посмотреть свои очки активности, время в чате, количество сообщений.
     
         ! За одно сообщение вы получаете **${data.pointPerMsg}** очко/в активности, за одну минуту в чате вы получаете **${data.pointPerMinute}** очков активности.

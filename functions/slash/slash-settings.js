@@ -19,6 +19,7 @@ export default function SlashSettings(interaction, options, client) {
         workGetMax: options.getNumber('work-max'),
         workGetMin: options.getNumber('work-min'),
         language: options.getString('bot-language'),
+        referalPoints: options.getNumber('referal-points'),
     }
 
 
