@@ -42,6 +42,7 @@ import Log from './functions/log.js'
 import SlashCreateVoiceMan from './functions/slash/slash-cratevoiceman.js'
 
 import sendEmnbed from './functions/sendEmbed.js'
+import SlashCoinsManage from './functions/slash/slash-coinsmanage.js'
 //////////////
 
 
@@ -67,11 +68,15 @@ client.on('ready', (client) => {
     console.log('Time is over is ready!!!')
 
     onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
+
+
         let Embed = new EmbedBuilder()
         .setTitle('Time is over turned on!')
         .setThumbnail(client.user.avatarURL())
         .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
         .setTimestamp()
+
+        if(client.user.id === '1002151461892927510')
         client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
     })
 
@@ -80,11 +85,12 @@ client.on('ready', (client) => {
     let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
     let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
-    if(client.user.id === '1002151461892927510')
+    if(client.user.id === '1002151461892927510') 
     update(ref(db, `TurnOnLogs`), {
         [datecode]: `${date}`
     })
-
+    
+    
 
     // onValue(ref(db, `Command`), async (snapshot) => {
     //   const data = snapshot.val();
@@ -416,6 +422,32 @@ client.on('ready', (client) => {
     //     }).catch(console.error);
 
     commands?.create({
+        name: "coinsmanage",
+        description: "ADMIN add or remove coins to special member",
+        options: [
+            {
+                name: 'function',
+                description: 'add or remove',
+                required: true,
+                choices: [{name:'Add', value:'Add'}, {name:'Remove', value:'Remove'}],
+                type: DiscordJS.ApplicationCommandOptionType.String
+            },
+            {
+                name: 'user',
+                description: 'Special user',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.User
+            },
+            {
+                name: 'number',
+                description: 'How many coins',
+                required: true,
+                type: DiscordJS.ApplicationCommandOptionType.Number
+            },
+        ]
+    });
+
+    commands?.create({
         name: "hug",
         description: "Hug someone",
         options: [
@@ -478,6 +510,8 @@ client.on('interactionCreate', async (interaction) => {
         if (interaction.type === InteractionType.ModalSubmit) { roomNameAnswer(interaction, options, client)}
 
         if(commandName === "help") { SlashHelp(interaction, options, client)}
+
+        else if(commandName === "coinsmanage") { SlashCoinsManage(interaction, options, client)}
 
         else if(commandName === "settings") { SlashSettings(interaction, options, client)}
 
@@ -760,8 +794,8 @@ client.on('messageCreate', async (message) => {
     // }
 })
 
-client.login(process.env.token)
+//client.login(process.env.token)
 // tio
 // client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
-//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')
+client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')
