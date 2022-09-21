@@ -13,6 +13,7 @@ export default function emptyRoomCheck(oldState, newState) {
     if(oldState.channelId !== null) {
         Log(oldState.guild, oldState.member.user, 'Empty room check')
     
+        try {
             let data = database.guilds[newState.guild.id].privateRooms[oldState.channelId]
             if(data && oldState !== null) {
                     if(oldState.channelId === data.roomChannelId) {
@@ -30,5 +31,8 @@ export default function emptyRoomCheck(oldState, newState) {
                     }   
                 
             }
+        } catch (error) {}
+
+
     }
 }
