@@ -2,6 +2,7 @@ import DiscordJS, { ActivityFlags, SlashCommandBuilder,TextInputStyle, TextInput
 import {db} from "../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import * as fs from 'fs'
 
 export default async function SlashRoomUnlock(interaction, options, client) {
   Log(interaction.guild, interaction.user, 'Slash room unlock')
@@ -9,10 +10,9 @@ export default async function SlashRoomUnlock(interaction, options, client) {
   interaction.update('** **')
 
 
-
-  let path =  `guilds/${interaction.guildId}/privateRooms/rooms`
-  onValue(ref(db, path), (snapshot) => {
-    let data = snapshot.val()
+  let database = JSON.parse(fs.readFileSync('database.json'))
+  // let path =  `guilds/${interaction.guildId}/privateRooms/rooms`
+    let data = database.guilds[interaction.guildId].privateRooms
     if(data !== null) {
       let obj = Object.getOwnPropertyNames(data)
 
@@ -23,5 +23,4 @@ export default async function SlashRoomUnlock(interaction, options, client) {
         }
       }
     }
-  }, {onlyOnce: true})
 } 

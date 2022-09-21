@@ -4,10 +4,14 @@ import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
 import userCheck from '../user-check.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
+    
 
 export default async function SlashCoinsManage(interaction, options, client)  {
     
     Log(interaction.guild, interaction.user, 'Slash coins manage')
+
     if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
         const fun = options.getString('function')
         const user = options.getUser('user')
@@ -15,23 +19,20 @@ export default async function SlashCoinsManage(interaction, options, client)  {
 
         userCheck(interaction.guild.id, user.id, user.username, interaction.guild.name, client).then(() => {
             if(!user.bot && !user.system) {
-                onValue(ref(db, `guilds/${interaction.guild.id}/members/${user.id}/memberMoneySystem`), async (snapshot) => {
-                    let data = snapshot.val()
+
+                let database = JSON.parse(fs.readFileSync('database.json'))
+                    let coins = database.guilds[interaction.guild.id].members[user.id].memberMoneySystem.coins
                     switch (fun) {
                         case 'Remove':
-            
-                            update(ref(db, `guilds/${interaction.guild.id}/members/${user.id}/memberMoneySystem`), {
-                                coins: data.coins - num
-                            })
+
+                            database.guilds[interaction.guild.id].members[user.id].memberMoneySystem.coins = coins - num
+                            WriteDB(database)
                             break;
                         case 'Add':
-            
-                            update(ref(db, `guilds/${interaction.guild.id}/members/${user.id}/memberMoneySystem`), {
-                                coins: data.coins + num
-                            })
+                            database.guilds[interaction.guild.id].members[user.id].memberMoneySystem.coins = coins + num
+                            WriteDB(database)
                             break;
                     }
-            
                     sendEmnbed({
                         color: 'blue',
                         thumbnail: null,
@@ -55,9 +56,6 @@ export default async function SlashCoinsManage(interaction, options, client)  {
                           ephemeral: true,
                         },
                     }) 
-            
-            
-                }, {onlyOnce: true})
             }
             else {
                 sendEmnbed({

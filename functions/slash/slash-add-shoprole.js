@@ -2,6 +2,8 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder,  ButtonStyle, ActivityFlags
 import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default async function SlashAddShopRole(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash add role to shop')
@@ -9,16 +11,21 @@ export default async function SlashAddShopRole(interaction, options, client)  {
         const role = options.getRole('role')
         const time = options.getInteger('time')
         const price = options.getInteger('price')
+
+        let database = JSON.parse(fs.readFileSync('database.json'))
     
-        onValue(ref(db, `guilds/${interaction.guildId}/shop`), (snapshot) => {
-            let data = snapshot.val()
+        let data = database.guilds[interaction.guildId].shop
             let index = 0
             if(data !== null) index = data.length
     
-            update(ref(db, `guilds/${interaction.guildId}/shop`), {
-                [index]: `${role.id}.${time}.${price}`
-            })
-        }, {onlyOnce: true})
+            database.guilds[interaction.guildId].shop[index] = `${role.id}.${time}.${price}`
+            WriteDB(database)
+
+            // update(ref(db, `guilds/${interaction.guildId}/shop`), {
+                
+            //     [index]: `${role.id}.${time}.${price}`
+            // })
+
 
         let Embed = new EmbedBuilder()
         .setColor(0x3a60b5)

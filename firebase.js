@@ -7,12 +7,13 @@ import 'firebase/compat/firestore';
 import "firebase/compat/database"
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBKPyRqTuw3x-e5S8pGR2dKxeGEVXw1-D4",
-  authDomain: "discorddb-75dcb.firebaseapp.com",
-  projectId: "discorddb-75dcb",
-  storageBucket: "discorddb-75dcb.appspot.com",
-  messagingSenderId: "224617886108",
-  appId: "1:224617886108:web:3bc3f9f45fdac562959859"
+  apiKey: "AIzaSyAOF6gO29jAnAzxoKdEj0VmohWIMMuUa6Y",
+  authDomain: "discorddb2build.firebaseapp.com",
+  projectId: "discorddb2build",
+  storageBucket: "discorddb2build.appspot.com",
+  messagingSenderId: "790016192233",
+  appId: "1:790016192233:web:6a8a28804e45c69a5b0a78",
+  databaseURL: "https://discorddb2build-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 const app = initializeApp(firebaseConfig);

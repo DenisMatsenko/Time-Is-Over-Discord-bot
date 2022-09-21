@@ -3,13 +3,19 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
 
 export default async function SlashActive(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash active')
-    onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), (snapshot) => {
-        let data = snapshot.val();
+
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+        console.log(database.guilds[interaction.guildId].members[interaction.user.id].memberInfo)
+        let data = database.guilds[interaction.guildId].members[interaction.user.id].memberInfo
         if(data !== null) {
 
+          console.log(true)
+          
           sendEmnbed({
             color: 'blue',
             thumbnail: interaction.user.avatarURL(),
@@ -54,7 +60,4 @@ export default async function SlashActive(interaction, options, client) {
             // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
             // interaction.reply({  embeds: [Embed] })
         }
-      }, {
-        onlyOnce: true
-      })
 }

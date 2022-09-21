@@ -3,13 +3,16 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default function SlashSettingsReview(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash settings review')
     if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 
-        onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
-            let data = snapshot.val()
+        let database = JSON.parse(fs.readFileSync('database.json'))
+        // onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
+            let data = database.guilds[interaction.guild.id].settings
             let arr = Object.getOwnPropertyNames(data)
             let strresult = ``
 
@@ -18,9 +21,8 @@ export default function SlashSettingsReview(interaction, options, client) {
                 } else {
                     strresult += `${arr[i]} - ${data[arr[i]]}.\n`
                 }
-
             }
-
+            
             sendEmnbed({
                 color: 'blue',
                 thumbnail: null,
@@ -44,7 +46,7 @@ export default function SlashSettingsReview(interaction, options, client) {
                   ephemeral: true,
                 },
             })
-        }, {onlyOnce: true})     
+        // }, {onlyOnce: true})     
 
     } else {
         sendEmnbed({

@@ -2,6 +2,7 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityFlags,
 import {db} from "./../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from './log.js';
+import * as fs from 'fs'
 
 export default async function SwitchPage(interaction, options, client, way)  {
     Log(interaction.guild, interaction.user, 'Switch shop page')
@@ -27,8 +28,12 @@ export default async function SwitchPage(interaction, options, client, way)  {
     let isFirst = pageNum === 1 ? true : false
 
     let path = `guilds/${interaction.guildId}/shop`
-    onValue(ref(db, path), (snapshot) => {
-        let data = snapshot.val()
+
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+    
+        let data = database.guilds[interaction.guildId].shop
+    
         let strOfItems = ''
             for (let i = from; i < before; i++) {
                 if(data[i]) {
@@ -126,5 +131,5 @@ export default async function SwitchPage(interaction, options, client, way)  {
 
             
             // interaction.channel.send({ embeds: [Embed], components: [row]})
-    }, {onlyOnce: true})
+
 }

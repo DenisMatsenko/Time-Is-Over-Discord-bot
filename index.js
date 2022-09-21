@@ -43,6 +43,7 @@ import SlashCreateVoiceMan from './functions/slash/slash-cratevoiceman.js'
 
 import sendEmnbed from './functions/sendEmbed.js'
 import SlashCoinsManage from './functions/slash/slash-coinsmanage.js'
+import WriteDB from './writeDB.js'
 //////////////
 
 
@@ -65,6 +66,12 @@ const client = new DiscordJS.Client({
 
 
 client.on('ready', (client) => {
+
+    onValue(ref(db, "database"), (snapshot) => { 
+        WriteDB(snapshot.val())
+    }, {onlyOnce: true})
+
+
     console.log('Time is over is ready!!!')
 
     onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
@@ -85,10 +92,6 @@ client.on('ready', (client) => {
     let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
     let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
-    if(client.user.id === '1002151461892927510') 
-    update(ref(db, `TurnOnLogs`), {
-        [datecode]: `${date}`
-    })
     
     
 
@@ -104,10 +107,12 @@ client.on('ready', (client) => {
     // setInterval(() => {
     //     roleIsOwer(client)      
     // }, 1800000) 
+
+    //////////////////////////////////////////////////////////////////////
  
     setInterval(() => {
-        roleIsOwer(client)      
-    }, 10000)
+        roleIsOwer(client)
+    }, 1800000)
 
     //     sendEmnbed({
     //     color: 'blue',
@@ -519,7 +524,32 @@ client.on('interactionCreate', async (interaction) => {
 
         else if(commandName === "settingsreview") { SlashSettingsReview(interaction, options, client)}
 
-        else if(commandName === "top") { SlashTop(interaction, options, client)}
+        else if(commandName === "top") {
+            sendEmnbed({
+                color: 'red',
+                thumbnail: null,
+        
+                russianTitle: `Пока эта комманда не работает..`,
+                russianDescription: `Скоро будет готово!`,
+                russianFields: [],
+        
+                englishTitle: `While this command does not work..`,
+                englishDescription: `Will be ready soon!`,
+                englishFields: [],
+        
+                author: null,                            
+                //// timestamp: 'true',
+                footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
+        
+                guildId: interaction.guildId,
+                feedback: {
+                  type: 'reply',
+                  path: interaction,
+                  ephemeral: false,
+                },
+            })
+            //  SlashTop(interaction, options, client)
+        }
         /////////////////
         else if(commandName === "hug") { SlashHug(interaction, options, client)}
 
@@ -665,19 +695,12 @@ client.on('messageCreate', async (message) => {
 
 
     // if(message.content == 'bbb') {
-    //     let Embed = new EmbedBuilder()
-    //     .setColor(0x3a60b5)
-    //     // .setAuthor({ name: `${interaction.user.username} ▪ work`, iconURL: interaction.user.avatarURL(), url: 'https://discord.js.' })
-    //     .setTitle(`You made  today.`)
-    //     .setDescription(`Youre bag is now.`)
-    //     .setTimestamp()
-    //     .addFields([
-    //         { name: 'Text messages:',    value: `a`, inline: true },
-    //         { name: 'Voice minutes:',    value: `a`, inline: true },
-    //         { name: 'Activity points:',    value: `a`, inline: true },
-    //     ])
-    //     // .setFooter({ text: `Time is over`, iconURL: client.user.displayAvatarURL() });
-    //     message.reply({  embeds: [Embed] })
+    //     let obj = {hi: "hi", innerOBJ: {inhi: "inHi"}, gg: 1}
+    //     console.log("obj: ",  obj)
+
+    //     Object.assign(obj.innerOBJ, {gg: "dadadad"})
+    //     console.log("obj: ",  obj)
+    // }
 
         // onValue(ref(db, `guilds/${message.guild.id}/settings/language`), (snapshot) => {
         //     if (snapshot.val()) {
@@ -798,4 +821,4 @@ client.login(process.env.token)
 // tio
 // client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
 //tio test
-// client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')
+//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')

@@ -3,17 +3,21 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
+
 
 export default async function SlashBuy(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash buy')
     const numOfItem = options.getInteger('item')
     
-    onValue(ref(db, `guilds/${interaction.guildId}/shop/${numOfItem - 1}`), (snapshot) => {
-        let item = snapshot.val()
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+   
+        let item =  database.guilds[interaction.guildId].shop[numOfItem - 1]
 
         if(item) {
-            onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem/coins`), (snapshot) => {
-                let money = snapshot.val()
+                let money = database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.coins
 
                 if(money >= parseInt(item.split('.')[2])) {
                     if (!interaction.member.roles.cache.some(role => role.id === item.split('.')[0])) {
@@ -95,7 +99,6 @@ export default async function SlashBuy(interaction, options, client)  {
                     })
 
                 }
-            }, {onlyOnce: true})
         }
         else {
             sendEmnbed({
@@ -123,14 +126,15 @@ export default async function SlashBuy(interaction, options, client)  {
             })
 
         }
-    }, {onlyOnce: true})
 }
 
 const writeToDb = (interaction, item, client) => {
-    onValue(ref(db, `guilds/${interaction.guildId}/timeRoles`), (snapshot) => {
-        let data = snapshot.val()
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+
+        let data = database.guilds[interaction.guildId].timeRoles
         let index = 0
-        if(data !== null) index = data.length
+        if(data) index = Object.keys(data).length
 
         const role = item.split('.')[0]
         const member = interaction.user.id
@@ -139,9 +143,25 @@ const writeToDb = (interaction, item, client) => {
            return (d.getFullYear()*525960 +  d.getMonth() * 43800 + (d.getDate()+parseInt(item.split('.')[1])) * 1440 + d.getHours() * 60 + d.getMinutes())
         }
 
-        update(ref(db, `guilds/${interaction.guildId}/timeRoles`), {
-            [index]: `${time()}.${role}.${member}`
-        })
+        // let mytimeRroles = database.guilds[interaction.guildId].timeRoles
+        // new mytimeRroles[index] = `${time()}.${role}.${member}`
+
+        // database.guilds[interaction.guildId].timeRoles[`${index}`] = `${time()}.${role}.${member}`
+        // database.guilds[interaction.guildId].timeRoles = mytimeRroles
+
+        console.log(database.guilds[interaction.guildId].timeRoles)
+
+        if(database.guilds[interaction.guildId].timeRoles) {
+            let mytimeRoles = database.guilds[interaction.guildId].timeRoles
+            Object.assign(mytimeRoles,  {[index]: `${time()}.${role}.${member}`})
+            database.guilds[interaction.guildId].timeRoles = mytimeRoles
+        } else {
+            Object.assign(database.guilds[interaction.guildId], {timeRoles:  {[index]: `${time()}.${role}.${member}`}})
+        }
+
+
+
+        WriteDB(database)
 
         sendEmnbed({
             color: 'blue',
@@ -162,5 +182,4 @@ const writeToDb = (interaction, item, client) => {
             guildId: interaction.guildId,
             feedback: {type: 'reply', path: interaction, ephemeral: true,},
         })
-    }, {onlyOnce: true})
 }

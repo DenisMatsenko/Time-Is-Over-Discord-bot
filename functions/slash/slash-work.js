@@ -3,20 +3,24 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default function SlashWork(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash work')
-    onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+
 
     
     //////////////////////////////
-    const min = snapshot.val().workGetMin
-    const max = snapshot.val().workGetMax
+    const min = database.guilds[interaction.guild.id].settings.workGetMin
+    const max = database.guilds[interaction.guild.id].settings.workGetMax
     ///////////////////////////////
 
     let path = `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem`
-    onValue(ref(db, path), (snapshot) => {
-        let data = snapshot.val()
+    
+        let data = database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem
         if(data !== null) {
             let lastTime = data.lastWorkTime
             let d = new Date()
@@ -39,10 +43,14 @@ export default function SlashWork(interaction, options, client) {
                     interaction.reply({  embeds: [Embed] })
             } else {
                 let randomNum = Math.floor(Math.random() * ((max+1)-min)) + min;
-                update(ref(db, path), {
-                    coins: (data.coins + randomNum),
-                    lastWorkTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
-                })
+
+                database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.coins = (data.coins + randomNum)
+                database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.lastWorkTime = `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                WriteDB(database)
+                // update(ref(db, path), {
+                //     coins: (data.coins + randomNum),
+                //     lastWorkTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                // })
 
                 
                 sendEmnbed({
@@ -71,6 +79,4 @@ export default function SlashWork(interaction, options, client) {
             }
             
         }
-    }, {onlyOnce: true})
-}, {onlyOnce: true}) 
 }

@@ -4,29 +4,46 @@ import {set, ref, onValue, remove, update} from "firebase/database"
 import { async } from '@firebase/util'
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default async function SlashMyReferral(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash my referral')
     let User = options.getUser('user') 
 
         if(!User.bot && !User.system && interaction.guildId !== null) {
-            let path = `guilds/${interaction.guildId}/members/${User.id}`
+            // let path = `guilds/${interaction.guildId}/members/${User.id}`
         
-            onValue(ref(db, path), (snapshot) => {
-              let data = snapshot.val();
-              onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), (snapshot) => {
-                let mydata = snapshot.val();
+            let database = JSON.parse(fs.readFileSync('database.json'))
+            // onValue(ref(db, path), (snapshot) => {
+              let data = database.guilds[interaction.guildId].members[User.id]
+
+              
+              // onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), (snapshot) => {
+                let mydata = database.guilds[interaction.guildId].members[interaction.user.id].memberInfo
      
               //exists checking
-              if(data !== null && interaction.user.id != User.id && !mydata.hasRefferal) {
-                set(ref(db, `${path}/referrals/${interaction.user.id}`), {
-                    userName: interaction.user.username,
-                    userId: interaction.user.id
-                })
+              if(data && interaction.user.id != User.id && !mydata.hasRefferal) {
+                // database.guilds[interaction.guildId].members[User.id].referrals[interaction.user.id]
 
-                update(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), {
-                    hasRefferal: true,
-                  })
+                if(!database.guilds[interaction.guildId].members[User.id].referrals) {
+                  Object.assign(database.guilds[interaction.guildId].members[User.id], {referrals: {[interaction.user.id]: {userName: interaction.user.username, userId: interaction.user.id}}})
+                }
+                else {
+                  Object.assign(database.guilds[interaction.guildId].members[User.id].referrals, {[interaction.user.id]: {userName: interaction.user.username, userId: interaction.user.id}})
+                }
+                database.guilds[interaction.guildId].members[interaction.user.id].memberInfo.hasRefferal = true
+                WriteDB(database)
+
+                // set(ref(db, `${path}/referrals/${interaction.user.id}`), {
+                //     userName: interaction.user.username,
+                //     userId: interaction.user.id
+                // })
+
+                
+                // update(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberInfo`), {
+                //     hasRefferal: true,
+                //   })
 
                   
                   sendEmnbed({
@@ -52,9 +69,8 @@ export default async function SlashMyReferral(interaction, options, client) {
                       ephemeral: false,
                     },
                 })
-
               }
-              else if (data !== null && interaction.user.id != User.id && mydata.hasRefferal) {
+              else if (data && interaction.user.id != User.id && mydata.hasRefferal) {
                 sendEmnbed({
                   color: 'red',
                   thumbnail: null,
@@ -63,7 +79,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                   russianDescription: `У вас уже есть реферал`,
                   russianFields: [],
           
-                  englishTitle: `Something is wrong :[`,
+                  englishTitle: `Something is wrong 1 :[`,
                   englishDescription: `You already have a referral.`,
                   englishFields: [],
           
@@ -79,7 +95,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                   },
               })
               }
-              else if (data !== null && interaction.user.id == User.id) {
+              else if (data && interaction.user.id == User.id) {
                 sendEmnbed({
                   color: 'red',
                   thumbnail: null,
@@ -88,7 +104,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                   russianDescription: `У вас уже есть реферал`,
                   russianFields: [],
           
-                  englishTitle: `Something is wrong :[`,
+                  englishTitle: `Something is wrong 2 :[`,
                   englishDescription: `You already have a referral.`,
                   englishFields: [],
           
@@ -113,7 +129,7 @@ export default async function SlashMyReferral(interaction, options, client) {
                   russianDescription: `У <@${User.id}> нет аккаунта.`,
                   russianFields: [],
           
-                  englishTitle: `Something is wrong :[`,
+                  englishTitle: `Something is wrong 3 :[`,
                   englishDescription: `<@${User.id}> doesn't have an interactive account.`,
                   englishFields: [],
           
@@ -129,22 +145,22 @@ export default async function SlashMyReferral(interaction, options, client) {
                   },
               })
               }
-            }, {
-                onlyOnce: true 
-            })
-            }, {
-                onlyOnce: true 
-            })
+            // }, {
+            //     onlyOnce: true 
+            // })
+            // }, {
+            //     onlyOnce: true 
+            // })
         } else {
           sendEmnbed({
             color: 'red',
             thumbnail: null,
     
-            russianTitle: `Что-то пошло не так :[`,
+            russianTitle: `Что-то пошло не так  :[`,
             russianDescription: `Введен неправильный аккаунт.`,
             russianFields: [],
     
-            englishTitle: `Something is wrong :[`,
+            englishTitle: `Something is wrong 4 :[`,
             englishDescription: `Wrong account entered.`,
             englishFields: [],
     

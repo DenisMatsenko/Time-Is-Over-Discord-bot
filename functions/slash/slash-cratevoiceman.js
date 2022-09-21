@@ -2,6 +2,8 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityFlags,
 import {db} from "../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default async function SlashCreateVoiceMan(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash SlashCreateVoiceMan')
@@ -32,10 +34,12 @@ export default async function SlashCreateVoiceMan(interaction, options, client) 
 
         })
 
-          let path = `guilds/${interaction.guildId}/settings/voiceManageChannel`
-          update(ref(db, path), {
-            [ManageVoiceChannel.id]: 'qwd'
-          })
+            let database = JSON.parse(fs.readFileSync('database.json'))
+            Object.assign(database.guilds[interaction.guildId].settings.voiceManageChannel, {[ManageVoiceChannel.id]: 'qwd' })
+        //   let path = `guilds/${interaction.guildId}/settings/voiceManageChannel`
+        //   update(ref(db, path), {
+        //     [ManageVoiceChannel.id]: 'qwd'
+        //   })
 
 
 

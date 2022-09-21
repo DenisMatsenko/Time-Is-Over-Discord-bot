@@ -3,10 +3,13 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
 
 export default function SlashSettings(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash settings')
     if (interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    let database = JSON.parse(fs.readFileSync('database.json'))
     const settings = {
         voiceManageChannel: options.getChannel('voice-manage-channel') !== null ? options.getChannel('voice-manage-channel').id : options.getChannel('voice-manage-channel'),
         pointPerMinute: options.getNumber('point-per-minute'),
@@ -27,11 +30,14 @@ export default function SlashSettings(interaction, options, client) {
     
     for (let i = 0; i < arr.length; i++) {
         if(settings[arr[i]] !== null) {
-            update(ref(db, `guilds/${interaction.guild.id}/settings`), {
-                [arr[i]]: settings[arr[i]]
-            })
+            
+            database.guilds[interaction.guild.id].settings[arr[i]] =  settings[arr[i]]
+            // update(ref(db, `guilds/${interaction.guild.id}/settings`), {
+            //     [arr[i]]: settings[arr[i]]
+            // })
         }
     }
+    WriteDB(database)
 
     sendEmnbed({
         color: 'blue',

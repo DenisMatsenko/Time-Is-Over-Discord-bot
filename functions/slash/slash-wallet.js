@@ -3,12 +3,14 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
 
 export default function SlashWallet(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash wallet')
 
-    onValue(ref(db, `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem`), (snapshot) => {
-        let data = snapshot.val();
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+        let data = database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem
         if(data.coins !== null) {
           sendEmnbed({
             color: 'blue',
@@ -34,7 +36,4 @@ export default function SlashWallet(interaction, options, client) {
             },
           })
         }
-      }, {
-        onlyOnce: true
-      })
 }

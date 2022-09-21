@@ -3,22 +3,27 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
+
+    
 
 export default async function SlashCrime(interaction, options, client) {
     Log(interaction.guild, interaction.user, 'Slash crime')
-    onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
+    let database = JSON.parse(fs.readFileSync('database.json'))
+    // onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
     
     //////////////////////////////
-    const min = snapshot.val().crimeGetMin
-    const max = snapshot.val().crimeGetMax
-    const chanceL = snapshot.val().chanceCrime
-    const lostmin = snapshot.val().crimeLostMin
-    const lostmax = snapshot.val().crimeLostMax
+    const min = database.guilds[interaction.guild.id].settings.crimeGetMin
+    const max = database.guilds[interaction.guild.id].settings.crimeGetMax
+    const chanceL = database.guilds[interaction.guild.id].settings.chanceCrime
+    const lostmin = database.guilds[interaction.guild.id].settings.crimeLostMin
+    const lostmax = database.guilds[interaction.guild.id].settingsv.crimeLostMax
     ///////////////////////////////
 
     let path = `guilds/${interaction.guildId}/members/${interaction.user.id}/memberMoneySystem`
-    onValue(ref(db, path), (snapshot) => {
-        let data = snapshot.val()
+    // onValue(ref(db, path), (snapshot) => {
+        let data = database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem
         if(data !== null) {
             let lastTime = data.lastCrimeTime
             // console.log("data.lastCrimeTime: ",  data.lastCrimeTime)
@@ -58,10 +63,14 @@ export default async function SlashCrime(interaction, options, client) {
                 let chanceNum = Math.floor(Math.random() * 101);
                 if(chanceNum <= chanceL) {
                     let randomNum =  Math.floor(Math.random() * ((max+1)-min)) + min;
-                    update(ref(db, path), {
-                        coins: (data.coins + randomNum),
-                        lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
-                    })    
+
+                    database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.coins = (data.coins + randomNum)
+                    database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.lastCrimeTime = `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                    WriteDB(database)
+                    // update(ref(db, path), {
+                    //     coins: (data.coins + randomNum),
+                    //     lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                    // })    
 
                     sendEmnbed({
                         color: 'blue',
@@ -91,10 +100,14 @@ export default async function SlashCrime(interaction, options, client) {
 
                 else {
                     let randomNum =  Math.floor(Math.random() * ((lostmax+1)-lostmin)) + lostmin;
-                    update(ref(db, path), {
-                        coins: (data.coins - randomNum),
-                        lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
-                    })
+
+                    database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.coins = (data.coins - randomNum)
+                    database.guilds[interaction.guildId].members[interaction.user.id].memberMoneySystem.lastCrimeTime = `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                    WriteDB(database)
+                    // update(ref(db, path), {
+                    //     coins: (data.coins - randomNum),
+                    //     lastCrimeTime: `${d.getDate()}.${(d.getMonth()+1)}.${d.getFullYear()}`
+                    // })
 
                     sendEmnbed({
                         color: 'blue',
@@ -123,6 +136,6 @@ export default async function SlashCrime(interaction, options, client) {
             }
             
         }
-    }, {onlyOnce: true})
-}, {onlyOnce: true}) 
+    // }, {onlyOnce: true})
+// }, {onlyOnce: true}) 
 }

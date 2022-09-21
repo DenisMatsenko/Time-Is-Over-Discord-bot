@@ -3,10 +3,13 @@ import {db} from "./../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from './log.js'
 import sendEmnbed from './sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from './../writeDB.js'
 
 export default async function roleIsOwer(client) {
-            onValue(ref(db, `guilds`), async (snapshot) => {
-                let data = snapshot.val()
+    let database = JSON.parse(fs.readFileSync('database.json'))
+            // onValue(ref(db, `guilds`), async (snapshot) => {
+                let data = database.guilds
                 let guildsArr = Object.keys(data)
 
                 for (let i = 0; i < guildsArr.length; i++) {
@@ -28,8 +31,9 @@ export default async function roleIsOwer(client) {
                                             Log(client.guilds.cache.get(guildsArr[i]), client.guilds.cache.get(guildsArr[i]).members.cache.get(trarr[y].split('.')[2]).user, 'Role is over', 'CRASHED')
                                         }
                                         
-        
-                                        remove(ref(db, `guilds/${guildsArr[i]}/timeRoles/${y}`))
+                                        delete database.guilds[guildsArr[i]].timeRoles[y]
+                                        WriteDB(database)
+                                        // remove(ref(db, `guilds/${guildsArr[i]}/timeRoles/${y}`))
                                         Log(client.guilds.cache.get(guildsArr[i]), 'TIO BOT', 'Role is over',  trarr[y].split('.')[2])
                                         
                                         console.log(client.guilds.cache.get(guildsArr[i]).roles.cache.get(trarr[y].split('.')[1]).name)
@@ -89,5 +93,5 @@ export default async function roleIsOwer(client) {
                         }
                     }
                 } 
-            }, {onlyOnce: true})
+            // }, {onlyOnce: true})
 }

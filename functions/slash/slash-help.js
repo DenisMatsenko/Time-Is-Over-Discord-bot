@@ -3,12 +3,19 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
+import WriteDB from '../../writeDB.js'
+
+
+
+    
+   
 
 export default async function SlashHelp(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash help')
-    onValue(ref(db, `guilds/${interaction.guild.id}/settings`), (snapshot) => {
-    let data = snapshot.val();
-    console.log("data: ",  data)
+
+    let database = JSON.parse(fs.readFileSync('database.json'))
+    let data = database.guilds[interaction.guild.id].settings
 
     sendEmnbed({
         color: 'blue',
@@ -91,6 +98,4 @@ export default async function SlashHelp(interaction, options, client)  {
           ephemeral: false,
         },
     })
-
-    }, {onlyOnce: true}) 
 }

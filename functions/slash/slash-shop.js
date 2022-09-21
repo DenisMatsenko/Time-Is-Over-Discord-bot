@@ -3,14 +3,17 @@ import {db} from "./../../firebase.js"
 import {set, ref, onValue, remove, update} from "firebase/database"
 import Log from '../log.js'
 import sendEmnbed from '../sendEmbed.js'
+import * as fs from 'fs'
 
 export default async function SlashShop(interaction, options, client)  {
     Log(interaction.guild, interaction.user, 'Slash shop')
     // interaction.deferReply()
 
     let path = `guilds/${interaction.guildId}/shop`
-    onValue(ref(db, path), async (snapshot) => {
-        let data = snapshot.val()
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+    
+        let data = database.guilds[interaction.guildId].shop
         let isLast = false
         if(data !== null) {
             let strOfItems = ''
@@ -110,7 +113,7 @@ export default async function SlashShop(interaction, options, client)  {
                 },
             }) 
         }
-    }, {onlyOnce: true})
+
 
 
 
