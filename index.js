@@ -655,9 +655,9 @@ client.on('guildCreate' , async (guild) => {
     )
     // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
 
-    .setImage('https://media.discordapp.net/attachments/1006251207578361948/1012726409728368750/unknown.png')
+    .setImage('https://i.ibb.co/d00r8Rs/pp.jpg')
     .setTimestamp()
-    .setFooter({ text: 'Time is over', iconURL: 'https://cdn.discordapp.com/attachments/1006251207578361948/1012727195380236308/e2c999dc25c3f9552ec86031eaaffbf6.jpg' });
+    .setFooter({ text: 'Time is over', iconURL: client.user.displayAvatarURL() });
 
     guild.systemChannel.send({embeds: [Embed]})
 })
