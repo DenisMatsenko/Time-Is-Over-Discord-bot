@@ -43,6 +43,7 @@ import SlashCreateVoiceMan from './functions/slash/slash-cratevoiceman.js'
 
 import sendEmnbed from './functions/sendEmbed.js'
 import SlashCoinsManage from './functions/slash/slash-coinsmanage.js'
+import * as fs from 'fs'
 import WriteDB from './writeDB.js'
 //////////////
 
@@ -74,18 +75,18 @@ client.on('ready', (client) => {
 
     console.log('Time is over is ready!!!')
 
-    onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
+    // onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
 
 
-        let Embed = new EmbedBuilder()
-        .setTitle('Time is over turned on!')
-        .setThumbnail(client.user.avatarURL())
-        .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
-        .setTimestamp()
+    //     let Embed = new EmbedBuilder()
+    //     .setTitle('Time is over turned on!')
+    //     .setThumbnail(client.user.avatarURL())
+    //     .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
+    //     .setTimestamp()
 
-        if(client.user.id === '1002151461892927510')
-        client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
-    })
+    //     if(client.user.id === '1002151461892927510')
+    //     client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
+    // })
 
 
     let d = new Date()
@@ -621,7 +622,9 @@ client.on('channelDelete', async (channel) => {
 client.on('guildCreate' , async (guild) => {
     Log(guild, "TIO BOT", 'Guild Create')
 
-    update(ref(db, `guilds/${guild.id}/settings`), {
+    let database = JSON.parse(fs.readFileSync('database.json'))
+
+    Object.assign(database.guilds, {[guild.id]: {settings: {
         voiceManageChannel: 'none',
         pointPerMsg: 1,
         pointPerMinute: 1.5,
@@ -636,8 +639,25 @@ client.on('guildCreate' , async (guild) => {
         crimeLostMax: 100,
         language: 'English',
         referalPoints: 20,
+    }}})
+    WriteDB(database)
+    // update(ref(db, `guilds/${guild.id}/settings`), {
+    //     voiceManageChannel: 'none',
+    //     pointPerMsg: 1,
+    //     pointPerMinute: 1.5,
 
-    })
+    //     workGetMin: 10,
+    //     workGetMax: 50,
+
+    //     chanceCrime: 50,
+    //     crimeGetMin: 10,
+    //     crimeGetMax: 50,
+    //     crimeLostMin: 50,
+    //     crimeLostMax: 100,
+    //     language: 'English',
+    //     referalPoints: 20,
+
+    // })
 
     const Embed = new EmbedBuilder()
     .setColor(0x0099FF)
