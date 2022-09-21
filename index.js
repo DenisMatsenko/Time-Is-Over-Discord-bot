@@ -75,18 +75,16 @@ client.on('ready', (client) => {
 
     console.log('Time is over is ready!!!')
 
-    // onValue(ref(db, `TurnOnLogs`), async (snapshot) => {
 
+        let Embed = new EmbedBuilder()
+        .setTitle('Time is over turned on!')
+        .setThumbnail(client.user.avatarURL())
+        .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
+        .setTimestamp()
 
-    //     let Embed = new EmbedBuilder()
-    //     .setTitle('Time is over turned on!')
-    //     .setThumbnail(client.user.avatarURL())
-    //     .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
-    //     .setTimestamp()
+        if(client.user.id === '1002151461892927510')
+        client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
 
-    //     if(client.user.id === '1002151461892927510')
-    //     client.users.fetch('538343406326513704').then((user) => {user.send({ embeds: [Embed] })})
-    // })
 
 
     let d = new Date()
