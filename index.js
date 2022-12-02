@@ -625,7 +625,8 @@ client.on('guildMemberAdd', async (a) => {
 client.on('messageCreate', async (message) => {
     if(!message.author.bot && !message.system && message.guildId !== null) {
         userCheck(message.guildId, message.author.id, message.author.username, message.guild.name, client)}
-    setTimeout(userMessagePlus, 8000, message) //update user count fo text messages (DB)
+    setTimeout(userMessagePlus, 8000, message)
+     //update user count fo text messages (DB)
 })
 
 client.login(process.env.token)
