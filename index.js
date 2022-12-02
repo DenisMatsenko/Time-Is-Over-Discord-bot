@@ -91,21 +91,6 @@ client.on('ready', (client) => {
     let date = `${d.getHours()+2}:${d.getMinutes()} ${d.getDate()}:${d.getMonth()+1}:${d.getFullYear()}`
     let datecode = (d.getFullYear()*525960 +  d.getMonth() * 43800 + d.getDate() * 1440 + d.getHours() * 60 + d.getMinutes())
 
-    
-    
-
-    // onValue(ref(db, `Command`), async (snapshot) => {
-    //   const data = snapshot.val();
-    //   if(data !== null && data.item !== 'none') {
-    //     console.log("data: ",  data)
-    //     let ownerId = client.guilds.cache.get('919660235604508772').ownerId
-    //     client.guilds.cache.get('919660235604508772').members.cache.get(ownerId).send('hh1')
-    //   }
-    // })
-
-    // setInterval(() => {
-    //     roleIsOwer(client)      
-    // }, 1800000) 
 
     //////////////////////////////////////////////////////////////////////
  
@@ -113,37 +98,6 @@ client.on('ready', (client) => {
         roleIsOwer(client)
     }, 1800000)
 
-    //     sendEmnbed({
-    //     color: 'blue',
-    //     thumbnail: null,
-
-    //     russianTitle:`Временная роль закончилась.`,
-    //     russianDescription: null,
-    //     russianFields: [],
-
-    //     englishTitle: `Role has been removed.`,
-    //     englishDescription: null,
-    //     englishFields: [],
-
-    //     author: null,
-    //     //timestamp: true,
-    //     footer: { text: `Time is over`, iconURL: client.user.displayAvatarURL() },
-
-    //     guildId: '919660235604508772', 
-    //     feedback: {
-    //       type: 'send',
-    //       add: {client: client, guildId: '919660235604508772', memId: '538343406326513704'},
-    //       ephemeral: false
-    //     },
-    //   })
-
-    // client.guilds.cache.get('919660235604508772').members.fetch('538343406326513704').then((user) => console.log(user.send('hi')))
-    // client.guilds.cache.get('919660235604508772').members.cache.get('538343406326513704')
-    // console.log('dqwdq',    client.guilds.cache.get('919660235604508772').members.cache.get('538343406326513704')    )
-    // let commands = client.application?.commands
-    
-    // const guildId = '919660235604508772'
-    // const guild = client.guilds.cache.get(guildId)
     let commands 
 
     // if(guild) {
@@ -639,23 +593,7 @@ client.on('guildCreate' , async (guild) => {
         referalPoints: 20,
     }}})
     WriteDB(database)
-    // update(ref(db, `guilds/${guild.id}/settings`), {
-    //     voiceManageChannel: 'none',
-    //     pointPerMsg: 1,
-    //     pointPerMinute: 1.5,
 
-    //     workGetMin: 10,
-    //     workGetMax: 50,
-
-    //     chanceCrime: 50,
-    //     crimeGetMin: 10,
-    //     crimeGetMax: 50,
-    //     crimeLostMin: 50,
-    //     crimeLostMax: 100,
-    //     language: 'English',
-    //     referalPoints: 20,
-
-    // })
 
     const Embed = new EmbedBuilder()
     .setColor(0x0099FF)
@@ -688,155 +626,6 @@ client.on('messageCreate', async (message) => {
     if(!message.author.bot && !message.system && message.guildId !== null) {
         userCheck(message.guildId, message.author.id, message.author.username, message.guild.name, client)}
     setTimeout(userMessagePlus, 8000, message) //update user count fo text messages (DB)
-
-        
-
-        // let arr = [
-
-        // ]
-
-        // let shop = {}
-
-        // let myDataName = '2';
-        // let myDataValue = '8923829034902.20h.300$';
-        // shop[myDataName] = myDataValue;
-        
-    // if(message.content.split(' ')[0] ==='!@#$%^^%$#@!') {
-    //     client.application.commands.fetch(message.content.split(' ')[1]) // id of your command
-    //     .then( (command) => {
-    //   console.log(`Fetched command ${command.name}`)
-    //   // further delete it like so:
-    //   command.delete()
-    //   console.log(`Deleted command ${command.name}`)
-    //   }).catch(console.error);
-    // } 
-
-
-    // if(message.content == 'bbb') {
-    //     let obj = {hi: "hi", innerOBJ: {inhi: "inHi"}, gg: 1}
-    //     console.log("obj: ",  obj)
-
-    //     Object.assign(obj.innerOBJ, {gg: "dadadad"})
-    //     console.log("obj: ",  obj)
-    // }
-
-        // onValue(ref(db, `guilds/${message.guild.id}/settings/language`), (snapshot) => {
-        //     if (snapshot.val()) {
-        //         switch (snapshot.val()) {
-        //             case 'English':
-                        
-        //                 break;
-        //             case 'Russian':
-                    
-        //                 break;
-        //         }
-        //     }
-
-        // }, {onlyOnce: true}) 
-    //    sendEmnbed({color: 'red', title: 'eemmm title'})
-
-
-    // //     const exampleEmbed = new EmbedBuilder()
-	// // .setColor(0x0099FF)
-	// // .setTitle('Some title')
-    // // .setImage("https://c.tenor.com/XREF0Th-UykAAAAM/anime-hug-hug.gif")   
-    // // .setDescription('qwdqwd') 
-    // // // <iframe src="https://giphy.com/embed/NVBR6cLvUjV9C" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="">via GIPHY</a></p>                                                                                        
-
-    // // message.channel.send({ embeds: [exampleEmbed] });
-    // }
-
-
-    
-    
-    
- 
-
-     
-    // message.author.send(message.content).catch(error => {console.log(`error: ${error.code}`)})  
-    // console.log("messmessage.author.id: ",  message.author.id)
-    // console.log("message.channel: ",  message.channel.id)
-    // console.log("message.content: ",  message.content)
-    // console.log("")
-    // console.log("message: ",  message)
-
-    
-
-    // client.channels.cache.get('766828397292290069').send('bobo');
-
-
-    // --------WRITE TO DB-----------
-    // set(ref(db, message.id), {
-    //     guild: message.guild.id,
-    //     autor: message.author.id,
-    //     text: message.content,
-    //   })
-
-
-    ///read db
-    // let path = email.split('@')[0] + "-" + email.split('@')[1].split('.')[0] + "-" + email.split('@')[1].split('.')[1] + "/UserTasks"
-
-    // onValue(ref(db, path), (snapshot) => {
-    //   const data = snapshot.val();
-    //   if(data !== null) {
-    //     setAllPosts(Object.values(data))
-    //   }
-    // })
-
-    // if(message.content === 'change') {
-    //     client.guilds.cache.get(message.guildId).roles.cache.get('1004502958504935424').setColor('#800b0f')
-
-
-        
-    //     message.reply({
-    //         content: client.guilds.cache.get(message.guildId).roles.cache.get('1004502958504935424').hexColor
-    //     })
-    // }
-
-    // if(message.content === 'create') {
-    //     client.guilds.cache.get(message.guildId).roles.create({
-    //         name: 'super role',
-    //         color: '#3498db',
-    //         position: 4,
-    //         hoist: true,
-    //     })
-
-
-        
-    //     message.reply({
-    //         content: 'created'
-    //     })
-    // }
-
-
-    // if(message.content === 'time') {
-        
-    //     message.reply(charControl(message.author.username))
-    // }
-
-
-    // if(message.content === 'go bot') {
-    //     // const aaa =  client.guilds.cache.get(message.guildId).roles.cache.array()
-    //     const roles = [];
-    //     client.guilds.cache.get(message.guildId).roles.cache.forEach((role) => {
-    //         roles.push({
-    //             name: role.name,
-    //             id: role.id,
-    //             rp: role.rawPosition
-    //         })  
-    //     })
-
-    //     console.log(roles)
-        
-        
-    //     message.reply({
-    //         content: client.guilds.cache.get(message.guildId).iconURL()
-    //     })
-    // }
 })
 
 client.login(process.env.token)
-// tio
-// client.login('MTAwMjE1MTQ2MTg5MjkyNzUxMA.GmR5Qw.ndGqm3EwlddWrztBcTuvMCUzf7HWHnduAkOooM')
-//tio test
-//client.login('MTAxMjcyMzI0NDkwMzY5NDQwNg.GqFHbX.EXF0r7FDWEoUe_cV_gunh_QBs1zsorSz0Lyaxs')
