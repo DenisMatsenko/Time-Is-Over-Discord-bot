@@ -9,6 +9,9 @@ import CommandList from './functions/sup-functions/SlashCommandsList.js'
 import {db} from "./firebase.js"
 import {set, ref, onValue, remove, update, increment, forceWebSockets} from "firebase/database"
 import SlashAddTest from './functions/slash/slash-add-test.js'
+import SlashShowAllTests from './functions/slash/slash-show-all-tests.js'
+import NotifyTimerStart from './functions/sup-functions/TimeToSendNotifStart.js'
+import SendTestListToChannel from './functions/sup-functions/SendTestListToChammel.js'
 
 
 
@@ -31,16 +34,37 @@ const client = new DiscordJS.Client({
 
 
 client.on('ready', (client) => {
-    //console.log('Time is over is ready!!!')
+    console.log('Time is over is ready!!!')
     //BotTurnedOnMsg(client)
     CommandList(client.application?.commands)
+
+    NotifyTimerStart()
+
+
+    onValue(ref(db, 'Settings'), (snapshot) => { 
+        let data = snapshot.val()
+
+        if(data.TimeToSend == true) {
+
+            SendTestListToChannel(client)
+
+            update(ref(db, 'Settings'), {
+                LastNotifiDate: `${new Date().getDate()}.${new Date().getMonth()+1}`,
+                TimeToSend: false,
+            })
+        }
+    })
+ 
+    //client.application.commands.set([])
+
+    //console.log("client.application.commands: ",  client.application.commands.)
 
 
     // onValue(ref(db, "database"), (snapshot) => { 
     //     WriteDB(snapshot.val())
     // }, {onlyOnce: true})
 
-    // client.application.commands.fetch('1012725832436957184')
+    // client.application.commands.fetch('1010625742045978754')
     // .then( (command) => {
     //     console.log(`Fetched command ${command.name}`)
     //     // further delete it like so:
@@ -56,12 +80,13 @@ client.on('interactionCreate', async (interaction) => {
         
         if(commandName === "help") { SlashHelp(interaction, options, client)}
 
-        if(commandName === "addtest") { SlashAddTest(interaction, options, client)}
+        if(commandName === "add-test") { SlashAddTest(interaction, options, client)}
+
+        if(commandName === "show-all-tests") { SlashShowAllTests(interaction, options, client)}
 
     } 
     else CommOnlyServsWarning()
 })
 
-//MTAwMjE1MTQ2MTg5MjkyNzUxMA.GIl6a2.UXvE4a0jsxGqmq0-oUtIihDMlKbQcYcj0Fn2aQ
-//client.login(process.env.token)
-client.login("MTAwMjE1MTQ2MTg5MjkyNzUxMA.GIl6a2.UXvE4a0jsxGqmq0-oUtIihDMlKbQcYcj0Fn2aQ")
+
+client.login(process.env.token)
