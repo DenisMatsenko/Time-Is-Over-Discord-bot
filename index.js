@@ -12,9 +12,12 @@ import SlashAddTest from './functions/slash/slash-add-test.js'
 import SlashShowAllTests from './functions/slash/slash-show-all-tests.js'
 import NotifyTimerStart from './functions/sup-functions/TimeToSendNotifStart.js'
 import SendTestListToChannel from './functions/sup-functions/SendTestListToChammel.js'
+import GetToken from './functions/sup-functions/Token.js'
 
 
-
+//delit old
+//show all tests
+//help
 
 const client = new DiscordJS.Client({
     intents: [
@@ -40,7 +43,7 @@ client.on('ready', (client) => {
 
     NotifyTimerStart()
 
-
+    //send test list trigger 
     onValue(ref(db, 'Settings'), (snapshot) => { 
         let data = snapshot.val()
 
@@ -89,4 +92,6 @@ client.on('interactionCreate', async (interaction) => {
 })
 
 
-client.login(process.env.token)
+//client.login(GetToken())
+client.login(client.login(process.env.token))
+

@@ -3,7 +3,12 @@ import {set, ref, onValue, remove, update, increment, forceWebSockets} from "fir
 import {db} from "./../../firebase.js"
 import { v4 } from 'uuid';
 
-
+const Day = [
+    "Today",
+    "Tomorrow",
+    "Afte 2 days",
+    "Afte 3 days",
+]
 
 export default async function SendTestListToChannel(client)  {
 
@@ -24,53 +29,48 @@ export default async function SendTestListToChannel(client)  {
         //console.log( client.guilds.cache.get('1006001493834465321'))
         //console.log('hi')
     
-        onValue(ref(db, 'database'), (snapshot) => { 
+        onValue(ref(db), (snapshot) => { 
             //console.log(snapshot.val())
-            const data = snapshot.val()
+            const data = snapshot.val().database
+            const settings = snapshot.val().Settings
     
-            for (let i = 0; i < Object.keys(data).length; i++) {
+            //old
+            // for (let i = 0; i < Object.keys(data).length; i++) {
     
-                let testData = Object.entries(data)[i][1]
+            //     let testData = Object.entries(data)[i][1]
 
-                console.log("testData: ",  testData)
+            //     console.log("testData: ",  testData)
     
-                //console.log('hi')
-                //1006001494530736229
-                //interaction.channel.send({  embeds: [Embed] })
-                //console.log(parseInt(testData['test-date'].split('.')[0]));
-                //console.log(new Date().getDate() + 1)
+            //     //console.log('hi')
+            //     //1006001494530736229
+            //     //interaction.channel.send({  embeds: [Embed] })
+            //     //console.log(parseInt(testData['test-date'].split('.')[0]));
+            //     //console.log(new Date().getDate() + 1)
+                
+            //     for (let i = 0; i <= 3; i++) {
+                    // if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate() + i && ) {
+                    //     let Embed = new EmbedBuilder()
+                    //     .setTitle(`${Day[i]} - ${testData['test-subject']}`)
+                    //     .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
+                    //     //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
+                    //     client.guilds.cache.get(settings.ServerID).channels.cache.get(settings.ChannelID).send({ embeds: [Embed] })
+                    // }
+            //     }
+            // }
 
-                if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate() + 3) {
-                    let Embed = new EmbedBuilder()
-                    .setTitle(`After 3 days - ${testData['test-subject']}`)
-                    .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
-                    //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
-                    client.guilds.cache.get('919660235604508772').channels.cache.get('919660235604508774').send({ embeds: [Embed] })
-                }
+            //new
+            for (let i = 0; i <= 3; i++) {
+                for (let y = 0; y < Object.keys(data).length; y++) {
 
-                if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate() + 2) {
-                    let Embed = new EmbedBuilder()
-                    .setTitle(`After 2 days - ${testData['test-subject']}`)
-                    .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
-                    //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
-                    client.guilds.cache.get('919660235604508772').channels.cache.get('919660235604508774').send({ embeds: [Embed] })
-                }
-    
-    
-                if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate() + 1) {
-                    let Embed = new EmbedBuilder()
-                    .setTitle(`Tomorrow - ${testData['test-subject']}`)
-                    .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
-                    //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
-                    client.guilds.cache.get('919660235604508772').channels.cache.get('919660235604508774').send({ embeds: [Embed] })
-                }
+                    let testData = Object.entries(data)[y][1]
 
-                if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate()) {
-                    let Embed = new EmbedBuilder()
-                    .setTitle(`Today - ${testData['test-subject']}`)
-                    .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
-                    //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
-                    client.guilds.cache.get('919660235604508772').channels.cache.get('919660235604508774').send({ embeds: [Embed] })
+                    if(parseInt(testData['test-date'].split('.')[0]) == new Date().getDate() + i) {
+                        let Embed = new EmbedBuilder()
+                        .setTitle(`${Day[i]} - ${testData['test-subject']}`)
+                        .setDescription(`${testData['test-topic']}. Created by <@${testData['created-by-id']}>`)
+                        //client.channels.cache.get('1006001494530736229').send({  embeds: [Embed] });
+                        client.guilds.cache.get(settings.ServerID).channels.cache.get(settings.ChannelID).send({ embeds: [Embed] })
+                    }
                 }
             }
             
