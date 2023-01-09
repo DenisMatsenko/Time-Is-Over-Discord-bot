@@ -4,9 +4,11 @@ import DiscordJS, { ActionRowBuilder, ButtonBuilder,  ButtonStyle, ActivityFlags
 export default async function SlashHelp(interaction, options, client)  {
 
     let Embed = new EmbedBuilder()
-    .setTitle('Time is over turned on!')
-    .setThumbnail(client.user.avatarURL())
-    .setAuthor({name: `${client.user.username} ▪ Turn on`, iconURL: client.user.avatarURL(), url: 'https://discord.gg/rEeW7Rs92q'})
+    .setTitle('Bot commands!')
+    .setDescription(
+        '**/add-test** - Add test to test list.\n' + 
+        '**/show-all-tests** - Write list of tests.\n'
+    )
     .setTimestamp()
 
     interaction.reply({  embeds: [Embed] })

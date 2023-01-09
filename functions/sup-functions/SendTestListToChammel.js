@@ -6,8 +6,8 @@ import { v4 } from 'uuid';
 const Day = [
     "Today",
     "Tomorrow",
-    "Afte 2 days",
-    "Afte 3 days",
+    "In 2 days",
+    "In 3 days",
 ]
 
 export default async function SendTestListToChannel(client)  {

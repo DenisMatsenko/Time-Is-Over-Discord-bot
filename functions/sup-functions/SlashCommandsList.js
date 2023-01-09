@@ -7,7 +7,7 @@ export default async function SlashCommandsList(commands)  {
     })
 
     commands?.create({
-        name: 'showalltests',
+        name: 'show-all-tests',
         description: "show all tests.",
     })
 
