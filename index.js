@@ -90,6 +90,6 @@ client.on('interactionCreate', async (interaction) => {
     else CommOnlyServsWarning()
 })
 
-client.login(GetTokenimport.Token)
-//client.login(client.login(process.env.token))
+//client.login(GetTokenimport.Token)
+client.login(client.login(process.env.token))
 
