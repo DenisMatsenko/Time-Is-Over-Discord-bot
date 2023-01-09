@@ -2,7 +2,7 @@ import DiscordJS, {EmbedBuilder} from 'discord.js'
 import {set, ref, onValue, remove, update, increment, forceWebSockets} from "firebase/database"
 import {db} from "./../../firebase.js"
 
-const Hour_for_notify = 10
+const Hour_for_notify = 19
 
 export default async function NotifyTimerStart(client) {
     setInterval(() => {

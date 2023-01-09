@@ -13,11 +13,8 @@ import SlashShowAllTests from './functions/slash/slash-show-all-tests.js'
 import NotifyTimerStart from './functions/sup-functions/TimeToSendNotifStart.js'
 import SendTestListToChannel from './functions/sup-functions/SendTestListToChammel.js'
 import GetTokenimport from './functions/sup-functions/Token.js'
+import DeleteOldTests from './functions/sup-functions/DeleteOldTests.js'
 
-
-
-//delit old
-//show all tests
 
 const client = new DiscordJS.Client({
     intents: [
@@ -50,6 +47,7 @@ client.on('ready', (client) => {
         if(data.TimeToSend == true) {
 
             SendTestListToChannel(client)
+            DeleteOldTests()
 
             update(ref(db, 'Settings'), {
                 LastNotifiDate: `${new Date().getDate()}.${new Date().getMonth()+1}`,
@@ -67,7 +65,7 @@ client.on('ready', (client) => {
     //     WriteDB(snapshot.val())
     // }, {onlyOnce: true})
 
-    // client.application.commands.fetch("1051856155229556806")
+    // client.application.commands.fetch("1061981789855432714")
     // .then( (command) => {
     //     console.log(`Fetched command ${command.name}`)
     //     // further delete it like so:
@@ -91,7 +89,6 @@ client.on('interactionCreate', async (interaction) => {
     } 
     else CommOnlyServsWarning()
 })
-
 
 client.login(GetTokenimport.Token)
 //client.login(client.login(process.env.token))
